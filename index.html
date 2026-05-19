@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KJK project</title>
+    <link rel="stylesheet" href="stlye.css">
+</head>
+<body>
+
+    <div class="left-column">
+        
+        <div id="player-static">
+            <h3>Kalandlap</h3>
+            <div class="stat-row">Ügyesség: <span id="skill-val">0</span></div>
+            <div class="stat-row">Életerő: <span id="stamina-val">0</span></div>
+            <div class="stat-row">Szerencse: <span id="luck-val">0</span></div>
+        </div>
+        
+        <div id="inventory">
+            <h3>Hátizsák</h3>
+            <div class="item-slot" id="slot-1">Kard</div>
+            <div class="item-slot" id="slot-2">Bőrpáncél</div>
+            <div class="item-slot" id="slot-3">Élelem (10)</div>
+            <div class="item-slot" id="slot-4">Varázsital</div>
+            <div class="item-slot" id="slot-5"></div>
+            <div class="item-slot" id="slot-6"></div>
+            <div class="item-slot" id="slot-7"></div>
+            <div class="item-slot" id="slot-8"></div>
+            <div class="item-slot" id="slot-9"></div>
+        </div>
+        
+    </div>
+
+    <div id="book">
+        <h2>1. fejezet</h2>
+        <div id="description">
+            A Tűzhegy lábánál állsz. Sötét barlangszáj tátong előtted. Megkezded az utad a mélybe...
+        </div>
+        
+        <div class="options-container">
+            <button class="option-btn">Nyugat felé fordulsz (71)</button>
+            <button class="option-btn">Kelet felé fordulsz (278)</button>
+        </div>
+    </div>
+
+    <div id="fight">
+        <h2>Csata</h2>
+        <div id="enemy-stats">
+            <p>Ellenség: <span id="enemy-name">Orc</span></p>
+            <p>Ügyesség: <span id="enemy-skill">6</span> | Életerő: <span id="enemy-stamina">5</span></p>
+        </div>
+        <button id="dice-btn">Kockadobás</button>
+    </div>
+
+</body>
+</html>
