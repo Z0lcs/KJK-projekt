@@ -1,49 +1,57 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KJK project</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="stlye.css">
+    <script src="script.js" defer></script>
 </head>
+
 <body>
-    
-    <div class="left-column">
-        
-        <div id="player-static">
-            <h3>Kalandlap</h3>
-            <div class="stat-row">Ügyesség: <span id="skill-val">0</span></div>
-            <div class="stat-row">Életerő: <span id="stamina-val">0</span></div>
-            <div class="stat-row">Szerencse: <span id="luck-val">0</span></div>
-        </div>
-        
-        <div id="inventory">
-            <h3>Hátizsák</h3>
-            <div class="item-slot" id="slot-1">Kard</div>
-            <div class="item-slot" id="slot-2">Bőrpáncél</div>
-            <div class="item-slot" id="slot-3">Élelem (10)</div>
-            <div class="item-slot" id="slot-4">Varázsital</div>
-            <div class="item-slot" id="slot-5"></div>
-            <div class="item-slot" id="slot-6"></div>
-            <div class="item-slot" id="slot-7"></div>
-            <div class="item-slot" id="slot-8"></div>
-            <div class="item-slot" id="slot-9"></div>
-        </div>
-        
-    </div>
+    <div class="main-container">
 
-    <div id="book">
-        <h2>1. fejezet</h2>
-        <div id="description">
-            A Tűzhegy lábánál állsz. Sötét barlangszáj tátong előtted. Megkezded az utad a mélybe...
+        <div class="button">
+            <a href="bekeres.html" title="Fájl betöltése"><i class="fa-solid fa-file"></i></a>
         </div>
-        
-        <div class="options-container">
-            <button class="option-btn">Nyugat felé fordulsz (71)</button>
-            <button class="option-btn">Kelet felé fordulsz (278)</button>
-        </div>
-    </div>
 
+        <div class="left-column">
+
+            <div id="player-static">
+                <h3>Kalandlap</h3>
+                <div class="stat-row">Ügyesség: <span id="skill-val">0</span></div>
+                <div class="stat-row">Életerő: <span id="stamina-val">0</span></div>
+                <div class="stat-row">Szerencse: <span id="luck-val">0</span></div>
+            </div>
+
+            <div id="inventory">
+                <h3>Hátizsák</h3>
+                <div class="item-slot" id="slot-1">Kard</div>
+                <div class="item-slot" id="slot-2">Bőrpáncél</div>
+                <div class="item-slot" id="slot-3">Élelem (10)</div>
+                <div class="item-slot" id="slot-4">Varázsital</div>
+                <div class="item-slot" id="slot-5"></div>
+                <div class="item-slot" id="slot-6"></div>
+                <div class="item-slot" id="slot-7"></div>
+                <div class="item-slot" id="slot-8"></div>
+                <div class="item-slot" id="slot-9"></div>
+            </div>
+        </div>
+
+        <div id="book">
+            <h2 id="chapter-title">1. fejezet</h2>
+            <div id="description">
+                Kérlek, tölts be egy könyv fájlt a bal felső sarokban!
+            </div>
+
+            <div class="options-container" id="options-container">
+            </div>
+        </div>
+
+    </div>
     <div id="fight">
         <h2>Csata</h2>
         <div id="enemy-stats">
@@ -54,4 +62,5 @@
     </div>
 
 </body>
+
 </html>
