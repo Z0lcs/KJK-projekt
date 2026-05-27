@@ -1,142 +1,177 @@
 /* ==========================================================================
-   1. ALAPBEÁLLÍTÁSOK (Nincs külső főgördítősáv)
+   CSS VÁLTOZÓK & ALAP
    ========================================================================== */
-body {
-    background: linear-gradient(to top left, #2c1a04, #4a3311, #0a0601);
-    height: 100vh;            /* Fixen a képernyő magassága */
-    margin: 0;
-    font-family: 'Georgia', serif;
-    padding: 25px;            /* Tisztes, egységes külső margó a képernyő szélétől */
+:root {
+    --bg-dark:       #0e1012;
+    --bg-card:       #1e2224;
+    --bg-book:       #25292c;
+    --border-bronze: #3a2f1d;
+    --border-gold:   #fdbb2d;
+    --border-orange: #e67e22;
+    --border-blue:   #4a6fa5;
+    --border-red:    #b21f1f;
+    --text-main:     #e2e8f0;
+    --text-muted:    #cbd5e1;
+    --text-light:    #f1f5f9;
+    --accent-gold:   #fdbb2d;
+    --accent-orange: #e67e22;
+    --accent-blue:   #4a6fa5;
+    --btn-bg:        #2c3e50;
+    --btn-border:    #34495e;
+    --btn-shadow:    #1a252f;
+    --btn-hover:     #34495e;
+    --gap:           20px;
+}
+
+/* ==========================================================================
+   ALAP STÍLUSOK
+   ========================================================================== */
+*, *::before, *::after {
     box-sizing: border-box;
-    color: #e2e8f0;
-    overflow: hidden;         /* Megakadályozza a teljes oldal görgetését */
-    position: relative;       /* Alap a gomb fix pozicionálásához */
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0601 0%, #1a0e04 40%, #2c1a04 70%, #0e1510 100%);
+    min-height: 100vh;
+    font-family: 'Georgia', serif;
+    color: var(--text-main);
+    padding: 20px;
+    /* NEM overflow:hidden – mobilon görgethetőnek kell lennie */
 }
 
 /* ==========================================================================
-   2. FŐOLDAL ELRENDEZÉSE (Fix magasság tartása a margókkal)
-   ========================================================================== */
-.main-container {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 25px;                /* Távolság a bal és jobb oszlop között */
-    max-width: 1400px;
-    height: calc(100vh - 50px); /* Képernyő magassága mínusz a body paddingje (25px fent + 25px lent) */
-    margin: 0 auto;
-}
-
-/* ==========================================================================
-   3. KÖZÖS KÁRTYA DIZÁJN (RPG / Sötét pergamen stílus)
+   KÖZÖS KÁRTYA DIZÁJN
    ========================================================================== */
 #player-static,
 #inventory,
 #book,
 #fight,
 #pop-up {
-    background: #1e2224;
-    border: 3px solid #3a2f1d; /* Bronz/Fa hatású keret */
-    border-radius: 12px;
-    padding: 25px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-bronze);
+    border-radius: 10px;
+    padding: 20px;
     box-shadow:
-        inset 0 2px 4px rgba(255, 255, 255, 0.05),
-        inset 0 -4px 10px rgba(0, 0, 0, 0.8),
-        0 15px 30px rgba(0, 0, 0, 0.6);
-    box-sizing: border-box;
+        inset 0 2px 4px rgba(255,255,255,0.04),
+        inset 0 -4px 10px rgba(0,0,0,0.7),
+        0 8px 20px rgba(0,0,0,0.5);
 }
 
 /* ==========================================================================
-   4. EGYSÉGES NAVIGÁCIÓS GOMB (Mindkét oldalon pontosan ugyanott)
+   NAVIGÁCIÓS GOMB
    ========================================================================== */
 .button {
-    position: fixed;          /* Fixen a képernyőhöz rögzítve */
-    top: 25px;                /* Tisztes, elegáns távolság fentről */
-    left: 25px;               /* Tisztes, elegáns távolság balról */
-    z-index: 100;             /* Mindig minden felett legfelül */
-    margin: 0;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 200;
 }
 
 .button a {
     text-decoration: none;
-    background: rgba(0, 0, 0, 0.6); 
-    padding: 12px 16px;       /* Kicsit nagyobb, kényelmesebb kattintási felület */
+    background: rgba(0,0,0,0.7);
+    padding: 10px 14px;
     border-radius: 8px;
-    border: 2px solid #3a2f1d; /* Szép bronz keret */
+    border: 2px solid var(--border-bronze);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
 
 .button a:hover {
-    background: #4a6fa5;      /* KJK kék kijelölési szín */
-    border-color: #4a6fa5;
-    transform: scale(1.05);   /* Finom nagyítás hoverre */
+    background: var(--accent-blue);
+    border-color: var(--accent-blue);
+    transform: scale(1.08);
 }
 
 .button i {
-    color: #e2e8f0;
-    font-size: 1.3rem;
-    text-shadow: none;
+    color: var(--text-main);
+    font-size: 1.2rem;
 }
 
 /* ==========================================================================
-   5. FIX BAL OSZLOP (Kalandlap és Hátizsák)
+   FŐOLDAL ELRENDEZÉS – DESKTOP (kétoszlopos rács)
+   ========================================================================== */
+.main-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: var(--gap);
+    max-width: 1400px;
+    /* Desktop: fixen a képernyőben marad, belső görgetéssel */
+    height: calc(100vh - 40px);
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   BAL OSZLOP
    ========================================================================== */
 .left-column {
     display: flex;
     flex-direction: column;
-    gap: 20px;                
-    height: 100%;            
-    box-sizing: border-box;
-    padding-top: 60px;        /* Fontos: pontosan ennyi helyet hagyunk lefelé a gombnak, hogy ne takarja a Kalandlapot */
+    gap: var(--gap);
+    height: 100%;
+    padding-top: 56px; /* helyet hagy a fix navigációs gombnak */
+    min-height: 0;     /* flex-shrink helyes működéséhez */
 }
 
+/* --- Kalandlap --- */
 #player-static {
-    border-color: #fdbb2d;
-    flex-shrink: 0;          
+    border-color: var(--border-gold);
+    flex-shrink: 0;
 }
 
 #player-static h3 {
-    margin-top: 0;
-    color: #fdbb2d;
-    font-size: 1.4rem;
+    color: var(--accent-gold);
+    font-size: 1.2rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
-    border-bottom: 2px dashed #fdbb2d;
+    border-bottom: 2px dashed var(--border-gold);
     padding-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .stat-row {
-    margin-bottom: .8rem;
-    font-size: 1.1rem;
     display: flex;
     justify-content: space-between;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 8px 12px;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+    padding: 7px 12px;
     border-radius: 6px;
+    font-size: 1rem;
+    margin-bottom: 6px;
 }
 
 .stat-row span {
     font-weight: bold;
-    color: #fdbb2d;
+    color: var(--accent-gold);
 }
 
+/* --- Hátizsák --- */
 #inventory {
-    border-color: #e67e22;
-    flex-grow: 1;            
+    border-color: var(--border-orange);
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden;        
-    margin-bottom: 5px;      
+    overflow: hidden;
+    min-height: 0;
 }
 
 #inventory h3 {
-    margin-top: 0;
-    color: #e67e22;
-    border-bottom: 2px dashed #e67e22;
+    color: var(--accent-orange);
+    border-bottom: 2px dashed var(--accent-orange);
     padding-bottom: 10px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     flex-shrink: 0;
 }
 
@@ -144,128 +179,314 @@ body {
     background: #141618;
     border: 1px solid #3a3f44;
     border-radius: 6px;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
-    padding: 10px;
-    margin: 4px 0;
-    font-size: 0.95rem;
-    color: #cbd5e1;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.7);
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    min-height: 34px;
 }
 
 /* ==========================================================================
-   6. GÖRGETHETŐ JOBB OSZLOP (Könyv / Történet rész)
+   JOBB OSZLOP – KÖNYV
    ========================================================================== */
 #book {
-    background: #25292c;
-    border-color: #4a6fa5;
-    height: 100%;            
-    overflow-y: auto;        /* Csak a könyv doboza kap belső görgetősávot */
+    background: var(--bg-book);
+    border-color: var(--accent-blue);
+    height: 100%;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    scroll-behavior: smooth;
 }
 
 #book h2 {
-    color: #4a6fa5;
-    font-size: 2rem;
-    margin-top: 0;
-    margin-bottom: 15px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    color: var(--accent-blue);
+    font-size: 1.7rem;
+    margin-bottom: 16px;
     flex-shrink: 0;
 }
 
 #description {
-    font-size: 1.25rem;
-    line-height: 1.8;
-    color: #f1f5f9;
+    font-size: 1.15rem;
+    line-height: 1.85;
+    color: var(--text-light);
     text-align: justify;
-    margin-bottom: 30px;     
-    flex-grow: 1;            
+    flex-grow: 1;
 }
 
 /* ==========================================================================
-   7. MODERN GOMBOK (3D benyomódó hatás)
+   GOMBOK
    ========================================================================== */
 .options-container {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
-    flex-shrink: 0;          
-    margin-top: auto;        
-    padding-bottom: 10px;    
+    flex-shrink: 0;
+    margin-top: 24px;
+    padding-bottom: 6px;
 }
 
-.option-btn, #continue, #dice-btn {
-    background: #2c3e50;
+.option-btn,
+#continue,
+#dice-btn {
+    background: var(--btn-bg);
     color: #ecf0f1;
-    border: 2px solid #34495e;
+    border: 2px solid var(--btn-border);
     border-radius: 6px;
-    padding: 14px 24px;
+    padding: 12px 20px;
     font-family: 'Georgia', serif;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 4px 0 #1a252f, 0 6px 8px rgba(0, 0, 0, 0.4);
-    transition: all 0.1s ease;
-}
-
-.option-btn:hover, #continue:hover, #dice-btn:hover {
-    background: #34495e;
-}
-
-.option-btn:active, #continue:active, #dice-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 0px 0 #1a252f, 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-/* ==========================================================================
-   8. CSATA / HARC RÉSZ
-   ========================================================================== */
-#fight {
-    display: none;           
-    margin-top: 20px;
-    border-color: #b21f1f;
-    background: linear-gradient(135deg, #23272a 0%, #2a0a0a 100%);
+    box-shadow: 0 4px 0 var(--btn-shadow), 0 6px 8px rgba(0,0,0,0.4);
+    transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
+    display: inline-block;
     text-align: center;
 }
 
+.option-btn:hover,
+#continue:hover,
+#dice-btn:hover {
+    background: var(--btn-hover);
+}
+
+.option-btn:active,
+#continue:active,
+#dice-btn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 var(--btn-shadow), 0 2px 4px rgba(0,0,0,0.3);
+}
+
 /* ==========================================================================
-   9. FÁJLBEKÉRŐ / POP-UP KÉPERNYŐ (Középre zárt, teljes képernyős)
+   CSATA PANEL
+   ========================================================================== */
+#fight {
+    display: none;
+    max-width: 1400px;
+    margin: var(--gap) auto 0;
+    border-color: var(--border-red);
+    background: linear-gradient(135deg, #1e2224 0%, #2a0a0a 100%);
+    text-align: center;
+}
+
+#fight h2 {
+    color: #e74c3c;
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+#enemy-stats {
+    margin-bottom: 14px;
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+#enemy-stats span {
+    font-weight: bold;
+    color: #e74c3c;
+}
+
+#battle-log {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #5a1a1a;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 1rem;
+    color: var(--text-light);
+    min-height: 44px;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   FÁJLBEKÉRŐ / POP-UP
    ========================================================================== */
 .fullscreen-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 40px);
 }
 
 #pop-up {
-    max-width: 650px;
+    max-width: 600px;
     width: 100%;
     text-align: center;
-    border-color: #4a6fa5;
-    padding: 40px; 
+    border-color: var(--accent-blue);
+    padding: 40px 30px;
 }
 
 #pop-up h2 {
-    font-size: 1.5rem;
-    margin-bottom: 30px;
-    color: #cbd5e1;
+    font-size: 1.35rem;
+    margin-bottom: 28px;
+    color: var(--text-muted);
+}
+
+#file-status {
+    font-size: 0.95rem;
+    color: #7fb77e;
+    min-height: 22px;
 }
 
 input[type="file"]::file-selector-button {
-    background: #e67e22;
+    background: var(--accent-orange);
     border: none;
     color: white;
-    padding: 8px 16px;
+    padding: 9px 18px;
     border-radius: 4px;
     cursor: pointer;
     font-family: 'Georgia', serif;
     margin-right: 10px;
     font-weight: bold;
+    transition: background 0.2s;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: #cf6d17;
 }
 
 input[type="file"] {
-    color: #cbd5e1;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   RESZPONZÍV – TABLET (max 900px)
+   ========================================================================== */
+@media (max-width: 900px) {
+    body {
+        padding: 12px;
+    }
+
+    .main-container {
+        grid-template-columns: 1fr;
+        height: auto;           /* Mobilon nincs fix magasság */
+        gap: 14px;
+    }
+
+    .left-column {
+        padding-top: 0;
+        height: auto;
+        flex-direction: row;    /* Kalandlap és hátizsák egymás mellett */
+        flex-wrap: wrap;
+    }
+
+    #player-static {
+        flex: 1 1 200px;
+    }
+
+    #inventory {
+        flex: 2 1 250px;
+        max-height: 280px;
+        overflow-y: auto;
+    }
+
+    #book {
+        height: auto;
+        min-height: 300px;
+        max-height: 60vh;
+    }
+
+    /* Navigációs gomb a könyv fölé kerül */
+    .main-container {
+        margin-top: 56px;
+    }
+}
+
+/* ==========================================================================
+   RESZPONZÍV – MOBIL (max 600px)
+   ========================================================================== */
+@media (max-width: 600px) {
+    html {
+        font-size: 15px;
+    }
+
+    body {
+        padding: 10px;
+    }
+
+    .main-container {
+        margin-top: 52px;
+        gap: 10px;
+    }
+
+    .left-column {
+        flex-direction: column; /* Mobilon egymás alatt */
+    }
+
+    #player-static,
+    #inventory,
+    #book {
+        padding: 14px;
+    }
+
+    #inventory {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    #book {
+        max-height: 55vh;
+    }
+
+    #book h2 {
+        font-size: 1.3rem;
+    }
+
+    #description {
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+
+    .options-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .option-btn,
+    #continue,
+    #dice-btn {
+        width: 100%;
+        padding: 14px 16px;
+        font-size: 0.9rem;
+    }
+
+    #fight {
+        padding: 16px;
+    }
+
+    #pop-up {
+        padding: 24px 16px;
+    }
+
+    #pop-up h2 {
+        font-size: 1.15rem;
+    }
+
+    .stat-row {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+    }
+}
+
+/* ==========================================================================
+   SCROLLBAR STÍLUS (Webkit)
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.2);
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+    background: #3a2f1d;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-blue);
 }
