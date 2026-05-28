@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="hu">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KJK project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="stlye.css">
     <script src="script.js" defer></script>
 </head>
-
 <body>
     <div class="fullscreen-wrapper">
 
@@ -19,41 +20,38 @@
         </div>
 
         <div id="pop-up">
-
-            <h2 id="description">Válassz ki egy szöveges fájlt (.txt):</h2>
+            <div class="pop-up-icon"><i class="fa-solid fa-book-open"></i></div>
+            <h2>Töltsd be a kalandot</h2>
+            <p class="pop-up-sub">Válassz ki egy szöveges fájlt (.txt) a játékhoz</p>
 
             <div class="options-container">
-                <input class="option-btn" type="file" id="fileButton" accept=".txt">
+                <input class="option-btn file-input" type="file" id="fileButton" accept=".txt">
             </div>
 
             <div class="format-guide">
                 <details>
-                    <summary>💡 Szükséges fájlformátum (példa)</summary>
-                    <p>
-                        A fájlnak pontosan olyan felépítésűnek kell lennie, mint a mintakönyvnek. Minden sornak 3
-                        részből kell állnia, amit a <strong>|</strong> (pipe) karakter választ el:
-                    </p>
+                    <summary><i class="fa-solid fa-circle-info"></i> Szükséges fájlformátum</summary>
+                    <p>Minden sor 3 részből áll, <strong>|</strong> karakterrel elválasztva:</p>
                     <pre class="syntax-highlight">fejezet_száma | Törzsszöveg... | Opció szövege:cél_fejezet</pre>
-                    <p>
-                        Példa sima választásra és harcra:
-                    </p>
-                    <pre class="example-text">1 | Kharé kapujában állsz... | Észak felé mész:14 , Keletre fordulsz:182
-14 | Egy alak lép ki a kapuból... | Harcolsz!:fight_Rabló_7_6_12</pre>
+                    <p>Harc indítása:</p>
+                    <pre class="example-text">fight_NévRészek_Ügyesség_Életerő_KövetkezőFejezet</pre>
+                    <p>Tárgy hozzáadása / eltávolítása (4. oszlop):</p>
+                    <pre class="example-text">1 | Szöveg... | Opció:2 | add_item:Kard:skill:2
+1 | Szöveg... | Opció:2 | remove_item:Kard
+1 | Szöveg... | Opció:2 | add_item:Élelem:stamina:4</pre>
+                    <p>Tárgy stathatásai: <code>skill</code>, <code>stamina</code>, <code>luck</code> (pozitív vagy negatív szám)</p>
                 </details>
             </div>
 
-            <br><br>
-
             <div id="file-status"></div>
 
-            <br>
-
             <div class="options-container">
-                <a href="index.html" id="continue" style="display:none;">Tovább a kalandra</a>
+                <a href="index.html" id="continue" style="display:none;">
+                    <i class="fa-solid fa-person-running"></i> Tovább a kalandra
+                </a>
             </div>
         </div>
 
     </div>
 </body>
-
 </html>

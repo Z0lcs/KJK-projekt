@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="hu">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KJK project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="stlye.css">
     <script src="script.js" defer></script>
 </head>
-
 <body>
     <div class="main-container">
 
@@ -21,48 +22,117 @@
         <div class="left-column">
 
             <div id="player-static">
-                <h3>Kalandlap</h3>
-                <div class="stat-row">Ügyesség: <span id="skill-val">0</span></div>
-                <div class="stat-row">Életerő: <span id="stamina-val">0</span></div>
-                <div class="stat-row">Szerencse: <span id="luck-val">0</span></div>
+                <h3><i class="fa-solid fa-scroll"></i> Kalandlap</h3>
+                <div class="stat-row">
+                    <span class="stat-label">Ügyesség</span>
+                    <span id="skill-val" class="stat-num">0</span>
+                </div>
+                <div class="stat-bar-wrap">
+                    <div class="stat-bar skill-bar" id="skill-bar"></div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Életerő</span>
+                    <span id="stamina-val" class="stat-num">0</span>
+                    <span class="stat-max" id="stamina-max"></span>
+                </div>
+                <div class="stat-bar-wrap">
+                    <div class="stat-bar stamina-bar" id="stamina-bar"></div>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Szerencse</span>
+                    <span id="luck-val" class="stat-num">0</span>
+                </div>
+                <div class="stat-bar-wrap">
+                    <div class="stat-bar luck-bar" id="luck-bar"></div>
+                </div>
             </div>
 
             <div id="inventory">
-                <h3>Hátizsák</h3>
-                <div class="item-slot" id="slot-1">Kard</div>
-                <div class="item-slot" id="slot-2">Bőrpáncél</div>
-                <div class="item-slot" id="slot-3">Élelem (10)</div>
-                <div class="item-slot" id="slot-4">Varázsital</div>
-                <div class="item-slot" id="slot-5"></div>
-                <div class="item-slot" id="slot-6"></div>
-                <div class="item-slot" id="slot-7"></div>
-                <div class="item-slot" id="slot-8"></div>
-                <div class="item-slot" id="slot-9"></div>
+                <h3><i class="fa-solid fa-briefcase"></i> Hátizsák</h3>
+                <div id="inventory-slots">
+                    <div class="item-slot empty" id="slot-0"></div>
+                    <div class="item-slot empty" id="slot-1"></div>
+                    <div class="item-slot empty" id="slot-2"></div>
+                    <div class="item-slot empty" id="slot-3"></div>
+                    <div class="item-slot empty" id="slot-4"></div>
+                    <div class="item-slot empty" id="slot-5"></div>
+                    <div class="item-slot empty" id="slot-6"></div>
+                    <div class="item-slot empty" id="slot-7"></div>
+                    <div class="item-slot empty" id="slot-8"></div>
+                </div>
             </div>
         </div>
 
         <div id="book">
-            <h2 id="chapter-title">1. fejezet</h2>
+            <h2 id="chapter-title">— — —</h2>
             <div id="description">
                 Kérlek, tölts be egy könyv fájlt a bal felső sarokban!
             </div>
+            <div class="options-container" id="options-container"></div>
+        </div>
 
-            <div class="options-container" id="options-container">
+    </div>
+
+    <!-- CSATA PANEL -->
+    <div id="fight">
+        <div id="fight-inner">
+            <h2><i class="fa-solid fa-sword"></i> Csata</h2>
+
+            <div id="combatants">
+                <div class="combatant" id="player-combatant">
+                    <div class="combatant-name">Te</div>
+                    <div class="hp-bar-wrap">
+                        <div class="hp-bar player-hp" id="player-hp-bar"></div>
+                    </div>
+                    <div class="hp-label"><span id="fight-player-stamina">—</span> ÉP</div>
+                    <div class="dice-result" id="player-dice-result">—</div>
+                </div>
+
+                <div id="vs-label">VS</div>
+
+                <div class="combatant" id="enemy-combatant">
+                    <div class="combatant-name" id="enemy-name">—</div>
+                    <div class="hp-bar-wrap">
+                        <div class="hp-bar enemy-hp" id="enemy-hp-bar"></div>
+                    </div>
+                    <div class="hp-label"><span id="enemy-stamina">—</span> ÉP</div>
+                    <div class="dice-result" id="enemy-dice-result">—</div>
+                </div>
+            </div>
+
+            <div id="battle-log">Dobj a kockával a harc megkezdéséhez!</div>
+
+            <!-- 3D CSS KOCKA -->
+            <div id="dice-container">
+                <div id="dice-scene">
+                    <div id="dice-cube" class="face-1">
+                        <div class="face front">
+                            <div class="dots d1"><span></span></div>
+                        </div>
+                        <div class="face back">
+                            <div class="dots d6"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                        </div>
+                        <div class="face right">
+                            <div class="dots d3"><span></span><span></span><span></span></div>
+                        </div>
+                        <div class="face left">
+                            <div class="dots d4"><span></span><span></span><span></span><span></span></div>
+                        </div>
+                        <div class="face top">
+                            <div class="dots d2"><span></span><span></span></div>
+                        </div>
+                        <div class="face bottom">
+                            <div class="dots d5"><span></span><span></span><span></span><span></span><span></span></div>
+                        </div>
+                    </div>
+                </div>
+                <button id="dice-btn"><i class="fa-solid fa-dice"></i> Kockadobás</button>
             </div>
         </div>
-
     </div>
 
-    <div id="fight">
-        <h2>⚔ Csata</h2>
-        <div id="enemy-stats">
-            <p>Ellenség: <span id="enemy-name">-</span></p>
-            <p>Ügyesség: <span id="enemy-skill">-</span> | Életerő: <span id="enemy-stamina">-</span></p>
-        </div>
-        <div id="battle-log">Dobj a kockával a harc megkezdéséhez!</div>
-        <button id="dice-btn"><i class="fa-solid fa-dice"></i> Kockadobás</button>
-    </div>
+    <!-- ITEM USE TOAST -->
+    <div id="item-toast"></div>
 
 </body>
-
 </html>

@@ -1,66 +1,77 @@
 /* ==========================================================================
-   CSS VÁLTOZÓK & ALAP
+   CSS VÁLTOZÓK
    ========================================================================== */
 :root {
-    --bg-dark:       #0e1012;
-    --bg-card:       #1e2224;
-    --bg-book:       #25292c;
-    --border-bronze: #3a2f1d;
-    --border-gold:   #fdbb2d;
-    --border-orange: #e67e22;
-    --border-blue:   #4a6fa5;
-    --border-red:    #b21f1f;
-    --text-main:     #e2e8f0;
-    --text-muted:    #cbd5e1;
-    --text-light:    #f1f5f9;
-    --accent-gold:   #fdbb2d;
-    --accent-orange: #e67e22;
-    --accent-blue:   #4a6fa5;
-    --btn-bg:        #2c3e50;
-    --btn-border:    #34495e;
-    --btn-shadow:    #1a252f;
-    --btn-hover:     #34495e;
-    --gap:           20px;
+    --bg-dark:        #0a0601;
+    --bg-card:        #1a1d1f;
+    --bg-book:        #1e2328;
+    --border-bronze:  #4a3820;
+    --border-gold:    #c9912a;
+    --border-orange:  #c0621a;
+    --border-blue:    #3d5f8f;
+    --border-red:     #8b1a1a;
+    --text-main:      #e8dcc8;
+    --text-muted:     #a89880;
+    --text-light:     #f0e8d8;
+    --accent-gold:    #e0a830;
+    --accent-orange:  #d4721e;
+    --accent-blue:    #5080b8;
+    --accent-red:     #c0362a;
+    --accent-green:   #6aaa6a;
+    --btn-bg:         #243040;
+    --btn-border:     #304058;
+    --btn-shadow:     #101820;
+    --btn-hover:      #304058;
+    --gap:            18px;
+    --radius:         10px;
+    --font-title:     'MedievalSharp', 'Georgia', serif;
+    --font-body:      'IM Fell English', 'Georgia', serif;
 }
 
 /* ==========================================================================
-   ALAP STÍLUSOK
+   RESET & ALAP
    ========================================================================== */
-*, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-    font-size: 16px;
-}
+html { font-size: 16px; }
 
 body {
-    background: linear-gradient(135deg, #0a0601 0%, #1a0e04 40%, #2c1a04 70%, #0e1510 100%);
+    background:
+        radial-gradient(ellipse at 20% 80%, rgba(60,30,5,0.6) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(10,20,30,0.5) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0601 0%, #130d04 35%, #1a1205 65%, #0a0e08 100%);
     min-height: 100vh;
-    font-family: 'Georgia', serif;
+    font-family: var(--font-body);
     color: var(--text-main);
     padding: 20px;
-    /* NEM overflow:hidden – mobilon görgethetőnek kell lennie */
+}
+
+/* Pergamen textúra overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
 }
 
 /* ==========================================================================
-   KÖZÖS KÁRTYA DIZÁJN
+   KÁRTYA ALAP
    ========================================================================== */
-#player-static,
-#inventory,
-#book,
-#fight,
-#pop-up {
+#player-static, #inventory, #book, #fight, #pop-up {
+    position: relative;
+    z-index: 1;
     background: var(--bg-card);
-    border: 2px solid var(--border-bronze);
-    border-radius: 10px;
-    padding: 20px;
+    border: 1px solid var(--border-bronze);
+    border-radius: var(--radius);
+    padding: 18px;
     box-shadow:
-        inset 0 2px 4px rgba(255,255,255,0.04),
-        inset 0 -4px 10px rgba(0,0,0,0.7),
-        0 8px 20px rgba(0,0,0,0.5);
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        inset 0 -2px 8px rgba(0,0,0,0.6),
+        0 4px 24px rgba(0,0,0,0.6),
+        0 0 0 1px rgba(0,0,0,0.4);
 }
 
 /* ==========================================================================
@@ -68,46 +79,45 @@ body {
    ========================================================================== */
 .button {
     position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 200;
+    top: 16px; left: 16px;
+    z-index: 500;
 }
 
 .button a {
     text-decoration: none;
-    background: rgba(0,0,0,0.7);
+    background: rgba(10,6,1,0.85);
     padding: 10px 14px;
     border-radius: 8px;
-    border: 2px solid var(--border-bronze);
+    border: 1px solid var(--border-bronze);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s, border-color 0.2s, transform 0.15s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
 }
 
 .button a:hover {
     background: var(--accent-blue);
     border-color: var(--accent-blue);
     transform: scale(1.08);
+    box-shadow: 0 0 16px rgba(80,128,184,0.4);
 }
 
-.button i {
-    color: var(--text-main);
-    font-size: 1.2rem;
-}
+.button i { color: var(--text-main); font-size: 1.1rem; }
 
 /* ==========================================================================
-   FŐOLDAL ELRENDEZÉS – DESKTOP (kétoszlopos rács)
+   FŐOLDAL RÁCS
    ========================================================================== */
 .main-container {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 280px 1fr;
     gap: var(--gap);
     max-width: 1400px;
-    /* Desktop: fixen a képernyőben marad, belső görgetéssel */
     height: calc(100vh - 40px);
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 /* ==========================================================================
@@ -118,41 +128,64 @@ body {
     flex-direction: column;
     gap: var(--gap);
     height: 100%;
-    padding-top: 56px; /* helyet hagy a fix navigációs gombnak */
-    min-height: 0;     /* flex-shrink helyes működéséhez */
+    padding-top: 54px;
+    min-height: 0;
 }
 
 /* --- Kalandlap --- */
 #player-static {
     border-color: var(--border-gold);
     flex-shrink: 0;
+    background: linear-gradient(160deg, #1e1a0e 0%, #1a1d1f 100%);
 }
 
-#player-static h3 {
-    color: var(--accent-gold);
-    font-size: 1.2rem;
+#player-static h3, #inventory h3 {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 2px dashed var(--border-gold);
+    border-bottom: 1px solid;
     padding-bottom: 10px;
     margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
+#player-static h3 { color: var(--accent-gold); border-color: var(--border-gold); }
+#inventory h3     { color: var(--accent-orange); border-color: var(--border-orange); }
 
 .stat-row {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background: rgba(0,0,0,0.2);
-    padding: 7px 12px;
-    border-radius: 6px;
-    font-size: 1rem;
-    margin-bottom: 6px;
+    margin-bottom: 2px;
+    font-size: 0.88rem;
+    gap: 6px;
 }
 
-.stat-row span {
-    font-weight: bold;
-    color: var(--accent-gold);
+.stat-label { color: var(--text-muted); flex: 1; }
+.stat-num   { font-family: var(--font-title); color: var(--accent-gold); font-size: 1rem; min-width: 24px; text-align: right; }
+.stat-max   { color: var(--text-muted); font-size: 0.75rem; min-width: 36px; }
+
+.stat-bar-wrap {
+    height: 6px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 3px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.4);
 }
+
+.stat-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+}
+
+.skill-bar   { background: linear-gradient(90deg, #c9912a, #f0c060); box-shadow: 0 0 6px rgba(224,168,48,0.5); }
+.stamina-bar { background: linear-gradient(90deg, #8b1a1a, #d44040); box-shadow: 0 0 6px rgba(192,54,42,0.5); }
+.luck-bar    { background: linear-gradient(90deg, #2a6030, #50b870); box-shadow: 0 0 6px rgba(106,170,106,0.5); }
 
 /* --- Hátizsák --- */
 #inventory {
@@ -162,102 +195,158 @@ body {
     flex-direction: column;
     overflow: hidden;
     min-height: 0;
+    background: linear-gradient(160deg, #1e1508 0%, #1a1d1f 100%);
 }
 
-#inventory h3 {
-    color: var(--accent-orange);
-    border-bottom: 2px dashed var(--accent-orange);
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    flex-shrink: 0;
+#inventory-slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 2px;
 }
 
-#inventory .item-slot {
-    background: #141618;
-    border: 1px solid #3a3f44;
+.item-slot {
+    background: #0e1012;
+    border: 1px solid #2a2a2a;
     border-radius: 6px;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.7);
-    padding: 8px 10px;
-    margin-bottom: 4px;
-    font-size: 0.9rem;
+    padding: 7px 9px;
+    font-size: 0.82rem;
     color: var(--text-muted);
-    min-height: 34px;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
 }
+
+.item-slot.empty {
+    border-style: dashed;
+    border-color: #222;
+    opacity: 0.4;
+}
+
+.item-slot.has-item {
+    border-color: var(--border-orange);
+    color: var(--text-light);
+    background: linear-gradient(135deg, #1a1005 0%, #0e1012 100%);
+    cursor: pointer;
+    opacity: 1;
+}
+
+.item-slot.has-item:hover {
+    border-color: var(--accent-orange);
+    background: linear-gradient(135deg, #28180a 0%, #151a1f 100%);
+    box-shadow: 0 0 10px rgba(212,114,30,0.2);
+    transform: translateY(-1px);
+}
+
+/* Tárgy stat badge */
+.item-stat-badge {
+    position: absolute;
+    right: 5px; top: 4px;
+    font-size: 0.68rem;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    line-height: 1.4;
+}
+.badge-skill   { background: rgba(201,145,42,0.25); color: var(--accent-gold); }
+.badge-stamina { background: rgba(192,54,42,0.25);  color: #e05050; }
+.badge-luck    { background: rgba(106,170,106,0.25);color: var(--accent-green); }
+
+/* Tárgy felvétel animáció */
+@keyframes item-pop {
+    0%   { transform: scale(0.7); opacity: 0; }
+    70%  { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+}
+.item-slot.item-added { animation: item-pop 0.35s ease; }
 
 /* ==========================================================================
-   JOBB OSZLOP – KÖNYV
+   KÖNYV
    ========================================================================== */
 #book {
     background: var(--bg-book);
-    border-color: var(--accent-blue);
+    border-color: var(--border-blue);
     height: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     scroll-behavior: smooth;
+    background-image:
+        radial-gradient(ellipse at top left, rgba(61,95,143,0.08) 0%, transparent 50%);
 }
 
 #book h2 {
+    font-family: var(--font-title);
     color: var(--accent-blue);
-    font-size: 1.7rem;
-    margin-bottom: 16px;
+    font-size: 1.5rem;
+    margin-bottom: 18px;
     flex-shrink: 0;
+    letter-spacing: 2px;
+}
+
+/* Fejezet fade-in */
+@keyframes chapter-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 #description {
-    font-size: 1.15rem;
-    line-height: 1.85;
+    font-size: 1.1rem;
+    line-height: 2;
     color: var(--text-light);
     text-align: justify;
     flex-grow: 1;
+    animation: chapter-in 0.4s ease;
+    font-style: italic;
 }
 
 /* ==========================================================================
-   GOMBOK
+   VÁLASZTÁSI GOMBOK
    ========================================================================== */
 .options-container {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     justify-content: center;
     flex-wrap: wrap;
     flex-shrink: 0;
-    margin-top: 24px;
-    padding-bottom: 6px;
+    margin-top: 22px;
+    padding-bottom: 4px;
 }
 
-.option-btn,
-#continue,
-#dice-btn {
+.option-btn, #continue, #dice-btn {
     background: var(--btn-bg);
-    color: #ecf0f1;
-    border: 2px solid var(--btn-border);
+    color: var(--text-light);
+    border: 1px solid var(--btn-border);
     border-radius: 6px;
-    padding: 12px 20px;
-    font-family: 'Georgia', serif;
-    font-size: 0.95rem;
+    padding: 11px 18px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
     text-decoration: none;
-    box-shadow: 0 4px 0 var(--btn-shadow), 0 6px 8px rgba(0,0,0,0.4);
-    transition: background 0.1s, transform 0.1s, box-shadow 0.1s;
-    display: inline-block;
-    text-align: center;
+    box-shadow: 0 3px 0 var(--btn-shadow), 0 4px 8px rgba(0,0,0,0.4);
+    transition: background 0.1s, transform 0.1s, box-shadow 0.1s, border-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
 }
 
-.option-btn:hover,
-#continue:hover,
-#dice-btn:hover {
+.option-btn:hover, #continue:hover {
     background: var(--btn-hover);
+    border-color: var(--accent-blue);
+    box-shadow: 0 3px 0 var(--btn-shadow), 0 4px 12px rgba(80,128,184,0.2);
 }
 
-.option-btn:active,
-#continue:active,
-#dice-btn:active {
-    transform: translateY(4px);
-    box-shadow: 0 0 0 var(--btn-shadow), 0 2px 4px rgba(0,0,0,0.3);
+.option-btn:active, #continue:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 var(--btn-shadow), 0 1px 4px rgba(0,0,0,0.3);
 }
 
 /* ==========================================================================
@@ -268,97 +357,332 @@ body {
     max-width: 1400px;
     margin: var(--gap) auto 0;
     border-color: var(--border-red);
-    background: linear-gradient(135deg, #1e2224 0%, #2a0a0a 100%);
+    background: linear-gradient(160deg, #1e1010 0%, #120808 100%);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Piros glowing háttér */
+#fight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(139,26,26,0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+#fight-inner { position: relative; z-index: 1; }
+
+#fight h2 {
+    font-family: var(--font-title);
+    color: var(--accent-red);
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 18px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px rgba(192,54,42,0.5);
+}
+
+/* --- HP sávok harcban --- */
+#combatants {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.combatant {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(139,26,26,0.4);
+    border-radius: 8px;
+    padding: 12px;
     text-align: center;
 }
 
-#fight h2 {
-    color: #e74c3c;
-    font-size: 1.5rem;
-    margin-bottom: 12px;
-}
-
-#enemy-stats {
-    margin-bottom: 14px;
-    font-size: 1rem;
+.combatant-name {
+    font-family: var(--font-title);
+    font-size: 0.9rem;
     color: var(--text-muted);
-    line-height: 1.7;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
 }
 
-#enemy-stats span {
-    font-weight: bold;
-    color: #e74c3c;
+#enemy-combatant .combatant-name { color: var(--accent-red); }
+
+.hp-bar-wrap {
+    height: 10px;
+    background: rgba(0,0,0,0.5);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 4px;
+    border: 1px solid rgba(0,0,0,0.5);
 }
 
-#battle-log {
-    background: rgba(0,0,0,0.4);
-    border: 1px solid #5a1a1a;
-    border-radius: 6px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    font-size: 1rem;
-    color: var(--text-light);
-    min-height: 44px;
-    line-height: 1.6;
+.hp-bar {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 100%;
+}
+
+.player-hp { background: linear-gradient(90deg, #8b1a1a, #e04040); box-shadow: 0 0 6px rgba(224,64,64,0.5); }
+.enemy-hp  { background: linear-gradient(90deg, #6a1010, #c03030); box-shadow: 0 0 6px rgba(192,48,48,0.5); }
+
+/* HP bar shake animáció sérüléskor */
+@keyframes hp-shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-4px); }
+    40%       { transform: translateX(4px); }
+    60%       { transform: translateX(-3px); }
+    80%       { transform: translateX(3px); }
+}
+.hp-damaged { animation: hp-shake 0.4s ease; }
+
+.hp-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px; }
+.hp-label span { font-weight: bold; color: var(--text-light); }
+
+#vs-label {
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: var(--accent-red);
+    text-shadow: 0 0 20px rgba(192,54,42,0.7);
+    text-align: center;
+}
+
+/* Kockadobás eredmény */
+.dice-result {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    color: var(--accent-gold);
+    min-height: 28px;
+    transition: all 0.2s;
 }
 
 /* ==========================================================================
-   FÁJLBEKÉRŐ / POP-UP
+   CSATA LOG
+   ========================================================================== */
+#battle-log {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid rgba(139,26,26,0.3);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    min-height: 50px;
+    text-align: center;
+    white-space: pre-line;
+}
+
+/* ==========================================================================
+   3D CSS KOCKA
+   ========================================================================== */
+#dice-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+#dice-scene {
+    width: 70px;
+    height: 70px;
+    perspective: 300px;
+    margin: 0 auto;
+}
+
+#dice-cube {
+    width: 70px;
+    height: 70px;
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(15deg) rotateY(20deg);
+    transition: transform 0.1s;
+}
+
+.face {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(145deg, #f0e8d0, #d4c8a8);
+    border: 2px solid #a09070;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 4px rgba(255,255,255,0.6), inset 0 -2px 4px rgba(0,0,0,0.2);
+}
+
+.face.front  { transform: translateZ(35px); }
+.face.back   { transform: rotateY(180deg) translateZ(35px); }
+.face.right  { transform: rotateY(90deg) translateZ(35px); }
+.face.left   { transform: rotateY(-90deg) translateZ(35px); }
+.face.top    { transform: rotateX(90deg) translateZ(35px); }
+.face.bottom { transform: rotateX(-90deg) translateZ(35px); }
+
+/* Pontok */
+.dots {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    padding: 5px;
+}
+
+.dots span {
+    width: 10px;
+    height: 10px;
+    background: #1a1008;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+    justify-self: center;
+    align-self: center;
+}
+
+.d1 { place-items: center; }
+.d2 { grid-template-columns: 1fr 1fr; }
+.d2 span:nth-child(1) { align-self: start; }
+.d2 span:nth-child(2) { align-self: end; }
+.d3 { grid-template-columns: 1fr 1fr; }
+.d3 span:nth-child(1) { align-self: start; }
+.d3 span:nth-child(2) { align-self: center; justify-self: center; grid-column: 1 / -1; }
+.d3 span:nth-child(3) { align-self: end; }
+.d4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.d5 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; }
+.d5 span:nth-child(5) { grid-column: 1 / -1; justify-self: center; }
+.d6 { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); }
+
+/* Dobás animáció */
+@keyframes dice-roll {
+    0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+    25%  { transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg); }
+    50%  { transform: rotateX(180deg) rotateY(540deg) rotateZ(270deg); }
+    75%  { transform: rotateX(450deg) rotateY(270deg) rotateZ(180deg); }
+    100% { transform: rotateX(720deg) rotateY(720deg) rotateZ(360deg); }
+}
+
+#dice-cube.rolling {
+    animation: dice-roll 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Végső pozíciók az eredményhez */
+#dice-cube.face-1 { transform: rotateX(0deg)    rotateY(0deg); }
+#dice-cube.face-2 { transform: rotateX(-90deg)  rotateY(0deg); }
+#dice-cube.face-3 { transform: rotateX(0deg)    rotateY(-90deg); }
+#dice-cube.face-4 { transform: rotateX(0deg)    rotateY(90deg); }
+#dice-cube.face-5 { transform: rotateX(90deg)   rotateY(0deg); }
+#dice-cube.face-6 { transform: rotateX(180deg)  rotateY(0deg); }
+
+/* Dice gomb */
+#dice-btn {
+    background: linear-gradient(135deg, #3a1a1a 0%, #2a1010 100%);
+    border-color: var(--border-red);
+    color: #e08080;
+    padding: 12px 28px;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+#dice-btn:hover {
+    background: linear-gradient(135deg, #5a2020 0%, #3a1818 100%);
+    border-color: var(--accent-red);
+    color: #f0a0a0;
+    box-shadow: 0 3px 0 #0a0404, 0 0 16px rgba(192,54,42,0.3);
+}
+
+#dice-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ==========================================================================
+   TOAST ÉRTESÍTŐ (tárgy felvétel / elveszítés)
+   ========================================================================== */
+#item-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(20,15,8,0.96);
+    border: 1px solid var(--border-orange);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    z-index: 1000;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+    opacity: 0;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+}
+
+#item-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* ==========================================================================
+   FÁJLBEKÉRŐ OLDAL
    ========================================================================== */
 .fullscreen-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: calc(100vh - 40px);
+    position: relative;
+    z-index: 1;
 }
 
 #pop-up {
-    max-width: 600px;
+    max-width: 580px;
     width: 100%;
     text-align: center;
-    border-color: var(--accent-blue);
-    padding: 40px 30px;
+    border-color: var(--border-blue);
+    padding: 40px 32px;
+    background: linear-gradient(160deg, #1a1d24 0%, #1a1d1f 100%);
+}
+
+.pop-up-icon {
+    font-size: 3rem;
+    color: var(--accent-blue);
+    margin-bottom: 16px;
+    opacity: 0.8;
 }
 
 #pop-up h2 {
-    font-size: 1.35rem;
-    margin-bottom: 28px;
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+}
+
+.pop-up-sub {
     color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+    font-style: italic;
 }
 
 #file-status {
-    font-size: 0.95rem;
-    color: #7fb77e;
+    font-size: 0.9rem;
+    color: var(--accent-green);
     min-height: 22px;
+    margin: 8px 0;
 }
 
-input[type="file"]::file-selector-button {
-    background: var(--accent-orange);
-    border: none;
-    color: white;
-    padding: 9px 18px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Georgia', serif;
-    margin-right: 10px;
-    font-weight: bold;
-    transition: background 0.2s;
-}
+#file-status.error { color: var(--accent-red); }
 
-input[type="file"]::file-selector-button:hover {
-    background: #cf6d17;
-}
-
-input[type="file"] {
-    color: var(--text-muted);
-}
-
-/* ÚJ OSZTÁLYOK AZ ÚTMUTATÓHOZ (INLINE STYLING HELYETT) */
 .format-guide {
-    margin-top: 25px;
+    margin: 20px 0;
     text-align: left;
-    background: rgba(0, 0, 0, 0.3);
-    padding: 15px;
+    background: rgba(0,0,0,0.3);
+    padding: 14px;
     border-radius: 6px;
     border: 1px dashed var(--border-bronze);
 }
@@ -366,173 +690,137 @@ input[type="file"] {
 .format-guide details summary {
     cursor: pointer;
     color: var(--accent-gold);
-    font-weight: bold;
-    font-family: sans-serif;
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     outline: none;
     user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
 }
 
 .format-guide p {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     margin-top: 10px;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--text-muted);
 }
 
 .format-guide pre {
-    background: #141618;
-    padding: 10px;
+    background: #0a0c0e;
+    padding: 8px 10px;
     border-radius: 4px;
-    font-size: 0.8rem;
-    margin-top: 8px;
+    font-size: 0.78rem;
+    margin-top: 6px;
     overflow-x: auto;
     font-family: monospace;
+    border: 1px solid #2a2a2a;
 }
 
-.format-guide .syntax-highlight {
-    color: #7fb77e;
+.format-guide .syntax-highlight { color: var(--accent-green); }
+.format-guide .example-text     { color: var(--text-muted); }
+.format-guide code              { background: rgba(255,255,255,0.08); padding: 1px 5px; border-radius: 3px; font-size: 0.8rem; }
+
+input[type="file"] { color: var(--text-muted); }
+
+input[type="file"]::file-selector-button {
+    background: linear-gradient(135deg, var(--accent-orange), #b05010);
+    border: none;
+    color: white;
+    padding: 9px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    margin-right: 12px;
+    font-weight: bold;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
-.format-guide .example-text {
-    color: var(--text-muted);
-    font-size: 0.75rem;
+input[type="file"]::file-selector-button:hover {
+    background: linear-gradient(135deg, #e07820, var(--accent-orange));
+    box-shadow: 0 0 12px rgba(212,114,30,0.3);
+}
+
+#continue {
+    background: linear-gradient(135deg, #1a3050, #243040);
+    border-color: var(--accent-blue);
+    color: #90b8e8;
+    padding: 12px 28px;
+    font-size: 1rem;
+}
+
+#continue:hover {
+    background: linear-gradient(135deg, #243860, #304858);
+    box-shadow: 0 3px 0 var(--btn-shadow), 0 0 20px rgba(80,128,184,0.25);
 }
 
 /* ==========================================================================
-   RESZPONZÍV – TABLET (max 900px)
+   SCROLLBAR
+   ========================================================================== */
+::-webkit-scrollbar              { width: 5px; height: 5px; }
+::-webkit-scrollbar-track        { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb        { background: var(--border-bronze); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover  { background: var(--accent-blue); }
+
+/* ==========================================================================
+   RESZPONZÍV – TABLET
    ========================================================================== */
 @media (max-width: 900px) {
-    body {
-        padding: 12px;
-    }
+    body { padding: 12px; }
 
     .main-container {
         grid-template-columns: 1fr;
-        height: auto;           /* Mobilon nincs fix magasság */
-        gap: 14px;
+        height: auto;
+        gap: 12px;
+        margin-top: 54px;
     }
 
     .left-column {
         padding-top: 0;
         height: auto;
-        flex-direction: row;    /* Kalandlap és hátizsák egymás mellett */
+        flex-direction: row;
         flex-wrap: wrap;
     }
 
-    #player-static {
-        flex: 1 1 200px;
-    }
+    #player-static { flex: 1 1 200px; }
+    #inventory     { flex: 2 1 250px; max-height: 260px; overflow-y: auto; }
+    #book          { height: auto; min-height: 300px; max-height: 58vh; }
 
-    #inventory {
-        flex: 2 1 250px;
-        max-height: 280px;
-        overflow-y: auto;
-    }
-
-    #book {
-        height: auto;
-        min-height: 300px;
-        max-height: 60vh;
-    }
-
-    /* Navigációs gomb a könyv fölé kerül */
-    .main-container {
-        margin-top: 56px;
-    }
+    #combatants { grid-template-columns: 1fr auto 1fr; gap: 10px; }
 }
 
 /* ==========================================================================
-   RESZPONZÍV – MOBIL (max 600px)
+   RESZPONZÍV – MOBIL
    ========================================================================== */
 @media (max-width: 600px) {
-    html {
-        font-size: 15px;
-    }
+    html { font-size: 15px; }
+    body { padding: 10px; }
 
-    body {
-        padding: 10px;
-    }
+    .main-container { margin-top: 50px; gap: 10px; }
+    .left-column    { flex-direction: column; }
 
-    .main-container {
-        margin-top: 52px;
-        gap: 10px;
-    }
+    #player-static, #inventory, #book { padding: 14px; }
+    #inventory     { max-height: 190px; overflow-y: auto; }
+    #book          { max-height: 52vh; }
+    #book h2       { font-size: 1.2rem; }
+    #description   { font-size: 0.95rem; line-height: 1.8; }
 
-    .left-column {
-        flex-direction: column; /* Mobilon egymás alatt */
-    }
+    .options-container { flex-direction: column; align-items: stretch; }
+    .option-btn, #continue, #dice-btn { width: 100%; padding: 13px 14px; }
 
-    #player-static,
-    #inventory,
-    #book {
-        padding: 14px;
-    }
+    #combatants { grid-template-columns: 1fr; gap: 8px; }
+    #vs-label   { display: none; }
+    #fight      { padding: 14px; }
+    #pop-up     { padding: 24px 16px; }
 
-    #inventory {
-        max-height: 200px;
-        overflow-y: auto;
-    }
-
-    #book {
-        max-height: 55vh;
-    }
-
-    #book h2 {
-        font-size: 1.3rem;
-    }
-
-    #description {
-        font-size: 1rem;
-        line-height: 1.7;
-    }
-
-    .options-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .option-btn,
-    #continue,
-    #dice-btn {
-        width: 100%;
-        padding: 14px 16px;
-        font-size: 0.9rem;
-    }
-
-    #fight {
-        padding: 16px;
-    }
-
-    #pop-up {
-        padding: 24px 16px;
-    }
-
-    #pop-up h2 {
-        font-size: 1.15rem;
-    }
-
-    .stat-row {
-        font-size: 0.95rem;
-        padding: 6px 10px;
-    }
-}
-
-/* ==========================================================================
-   SCROLLBAR STÍLUS (Webkit)
-   ========================================================================== */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2);
-    border-radius: 3px;
-}
-::-webkit-scrollbar-thumb {
-    background: #3a2f1d;
-    border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: var(--accent-blue);
+    #dice-scene { width: 56px; height: 56px; }
+    #dice-cube  { width: 56px; height: 56px; }
+    .face       { width: 56px; height: 56px; }
+    .face.front  { transform: translateZ(28px); }
+    .face.back   { transform: rotateY(180deg) translateZ(28px); }
+    .face.right  { transform: rotateY(90deg) translateZ(28px); }
+    .face.left   { transform: rotateY(-90deg) translateZ(28px); }
+    .face.top    { transform: rotateX(90deg) translateZ(28px); }
+    .face.bottom { transform: rotateX(-90deg) translateZ(28px); }
 }
