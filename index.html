@@ -73,7 +73,9 @@
 
     </div>
 
-    <!-- CSATA PANEL -->
+    <!-- ═══════════════════════════════════════════
+         CSATA PANEL
+         ═══════════════════════════════════════════ -->
     <div id="fight">
         <div id="fight-inner">
             <h2><i class="fa-solid fa-sword"></i> Csata</h2>
@@ -102,34 +104,87 @@
 
             <div id="battle-log">Dobj a kockával a harc megkezdéséhez!</div>
 
-            <!-- 3D CSS KOCKA -->
+            <!-- ═══════════════════════════════
+                 KÉT DARAB 3D CSS KOCKA
+                 Az első kocka (dice-cube-1) a játékos 1. dobását,
+                 a második (dice-cube-2) a 2. dobását mutatja.
+                 Együtt adják a 2d6 összegét.
+                 ═══════════════════════════════ -->
             <div id="dice-container">
-                <div id="dice-scene">
-                    <div id="dice-cube" class="face-1">
-                        <div class="face front">
-                            <div class="dots d1"><span></span></div>
+
+                <div id="dice-scenes">
+
+                    <!-- 1. kocka -->
+                    <div class="dice-scene-wrap">
+                        <div class="dice-scene">
+                            <div id="dice-cube-1" class="dice-cube face-1">
+                                <div class="face front">
+                                    <div class="dots d1"><span></span></div>
+                                </div>
+                                <div class="face back">
+                                    <div class="dots d6"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="face right">
+                                    <div class="dots d3"><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="face left">
+                                    <div class="dots d4"><span></span><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="face top">
+                                    <div class="dots d2"><span></span><span></span></div>
+                                </div>
+                                <div class="face bottom">
+                                    <div class="dots d5"><span></span><span></span><span></span><span></span><span></span></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="face back">
-                            <div class="dots d6"><span></span><span></span><span></span><span></span><span></span><span></span></div>
-                        </div>
-                        <div class="face right">
-                            <div class="dots d3"><span></span><span></span><span></span></div>
-                        </div>
-                        <div class="face left">
-                            <div class="dots d4"><span></span><span></span><span></span><span></span></div>
-                        </div>
-                        <div class="face top">
-                            <div class="dots d2"><span></span><span></span></div>
-                        </div>
-                        <div class="face bottom">
-                            <div class="dots d5"><span></span><span></span><span></span><span></span><span></span></div>
-                        </div>
+                        <div class="dice-label" id="dice-label-1">—</div>
                     </div>
+
+                    <!-- 2. kocka -->
+                    <div class="dice-scene-wrap">
+                        <div class="dice-scene">
+                            <div id="dice-cube-2" class="dice-cube face-1">
+                                <div class="face front">
+                                    <div class="dots d1"><span></span></div>
+                                </div>
+                                <div class="face back">
+                                    <div class="dots d6"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="face right">
+                                    <div class="dots d3"><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="face left">
+                                    <div class="dots d4"><span></span><span></span><span></span><span></span></div>
+                                </div>
+                                <div class="face top">
+                                    <div class="dots d2"><span></span><span></span></div>
+                                </div>
+                                <div class="face bottom">
+                                    <div class="dots d5"><span></span><span></span><span></span><span></span><span></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dice-label" id="dice-label-2">—</div>
+                    </div>
+
+                </div><!-- #dice-scenes -->
+
+                <!-- Gombok -->
+                <div id="fight-buttons">
+                    <button id="dice-btn">
+                        <i class="fa-solid fa-dice"></i> Kockadobás
+                    </button>
+                    <!-- Menekülés gomb: alapból rejtett, csak akkor jelenik meg,
+                         ha a fight-parancsban meg van adva escape-fejezet -->
+                    <button id="escape-btn" style="display:none;">
+                        <i class="fa-solid fa-person-running"></i> Menekülés
+                    </button>
                 </div>
-                <button id="dice-btn"><i class="fa-solid fa-dice"></i> Kockadobás</button>
-            </div>
-        </div>
-    </div>
+
+            </div><!-- #dice-container -->
+        </div><!-- #fight-inner -->
+    </div><!-- #fight -->
 
     <!-- ITEM USE TOAST -->
     <div id="item-toast"></div>
