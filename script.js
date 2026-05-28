@@ -15,29 +15,22 @@
 // 1. GLOBÁLIS ÁLLAPOT
 // ============================================================
 
-let bookChapters = {};   // A betöltött könyv összes fejezete
+let bookChapters = {};   
 
-/** Az aktuálisan folyamatban lévő harc adatai. */
 let currentEnemy = {
     name:        "",
     skill:       0,
     stamina:     0,
-    maxStamina:  0,   // Az ellenség kezdeti ÉP-je (HP-bar számításhoz)
+    maxStamina:  0,   
     next:        "1",
     escape:      null // Menekülési fejezet azonosítója (vagy null)
 };
 
-/**
- * A három fő stat MAXIMUMA (kockadobáskor állítódik be).
- * Tárgyhasználatkor ehhez clampelünk.
- */
 let maxStats = { skill: 12, stamina: 24, luck: 12 };
 
 /**
  * 9 leltárslot tömbje.
  * Minden elem: null (üres) VAGY { name, statType, statValue }
- * statType: 'skill' | 'stamina' | 'luck' | null (nem fogyasztható tárgy)
- * statValue: szám (pozitív vagy negatív)
  */
 let inventoryItems = new Array(9).fill(null);
 
@@ -68,12 +61,7 @@ function setStatDisplay(id, value) {
 }
 
 /**
- * A három fő stat (skill / stamina / luck) egységes frissítése:
- *  – 0 és maxStats[statName] közé clampeli az értéket
- *  – kiírja a #XXX-val elembe
- *  – frissíti a progress sávot (#XXX-bar)
- *  – stamina esetén szinkronizálja a harci panel ÉP-kijelzőjét is
- * Visszaadja a ténylegesen beállított értéket.
+ * A három fő stat egységes frissítése és MENTÉSE
  */
 function updateStat(statName, value) {
     const max     = maxStats[statName] || 1;
@@ -91,7 +79,21 @@ function updateStat(statName, value) {
         updatePlayerHpBar(clamped);
     }
 
+    // Mentés, hogy ne vesszen el aloldal váltáskor
+    saveCharacterState(clamped, statName);
+
     return clamped;
+}
+
+/** Karakter aktuális állapotának mentése */
+function saveCharacterState(currentValue, statName) {
+    try {
+        let charState = JSON.parse(localStorage.getItem('kjk_character') || '{}');
+        if(!charState.stats) charState.stats = {};
+        charState.stats[statName] = currentValue;
+        charState.maxStats = maxStats;
+        localStorage.setItem('kjk_character', JSON.stringify(charState));
+    } catch (_) {}
 }
 
 /** Állítja a játékos harci HP-sávját. */
@@ -108,10 +110,7 @@ function updateEnemyHpBar() {
     }
 }
 
-/**
- * Mutat egy felugró értesítő "toast" üzenetet (#item-toast).
- * Automatikusan eltűnik 2.8 másodperc után.
- */
+/** Mutat egy felugró értesítő "toast" üzenetet. */
 function showToast(msg) {
     const toast = document.getElementById("item-toast");
     if (!toast) return;
@@ -159,7 +158,6 @@ if (fileButton) {
             let parseErrors = 0;
 
             lines.forEach(line => {
-                // Formátum: ID | Törzsszöveg | Opciók (vesszővel elválasztva) | Tárgyakció
                 const parts = line.split('|');
                 if (parts.length < 2) { parseErrors++; return; }
 
@@ -168,7 +166,6 @@ if (fileButton) {
                 const optionsRaw = parts[2] ? parts[2].trim() : "";
                 const itemRaw    = parts[3] ? parts[3].trim() : "";
 
-                // --- Opciók beolvasása ---
                 let options = [];
                 if (optionsRaw) {
                     optionsRaw.split(',').forEach(opt => {
@@ -184,11 +181,6 @@ if (fileButton) {
                     });
                 }
 
-                // --- Tárgyakció beolvasása (4. oszlop) ---
-                // Formátum: add_item:Tárgy neve:statType:statValue
-                //       pl. add_item:Élelem:stamina:4
-                //           add_item:Kristálygolyó          (nincs stat-hatás)
-                //           remove_item:Kard
                 let itemAction = null;
                 if (itemRaw.startsWith("add_item:")) {
                     const iparts = itemRaw.substring(9).split(':');
@@ -237,6 +229,49 @@ if (fileButton) {
     });
 }
 
+// ============================================================
+// ÚJ: JÁTÉK RESETELÉSE (Minden mentés törlése a bekeres.html-en)
+// ============================================================
+const resetBtn = document.getElementById('resetGameButton');
+if (resetBtn) {
+    resetBtn.addEventListener('click', function () {
+        if (confirm("Biztosan törölni szeretnél minden mentést? (A betöltött könyv, a karaktered és az aktuális fejezeted is elveszik!)")) {
+            try {
+                // Kitöröljük a KJK-s kulcsokat a böngésző memóriájából
+                localStorage.removeItem('kjk_book');
+                localStorage.removeItem('kjk_character');
+                localStorage.removeItem('kjk_current_chapter');
+
+                // Visszajelzést adunk a felhasználónak
+                const statusEl = document.getElementById("file-status");
+                if (statusEl) {
+                    statusEl.textContent = "🗑 Minden játékmentés és betöltött könyv sikeresen törölve!";
+                    statusEl.style.color = "#c0362a"; // Átváltunk pirosas/narancsos színre a törlés miatt
+                }
+
+                // Elrejtjük a "Tovább a kalandra" gombot, hiszen nincs aktív könyv
+                const continueEl = document.getElementById("continue");
+                if (continueEl) {
+                    continueEl.style.display = "none";
+                }
+
+                // Egy kis plusz animáció a gombon a siker jelzésére
+                resetBtn.innerHTML = `<i class="fa-solid fa-check"></i> Sikeresen törölve!`;
+                resetBtn.style.borderColor = "var(--accent-red)";
+                resetBtn.disabled = true;
+
+                setTimeout(() => {
+                    resetBtn.innerHTML = `<i class="fa-solid fa-trash-can"></i> Játék resetelése`;
+                    resetBtn.style.borderColor = "";
+                    resetBtn.disabled = false;
+                }, 2000);
+
+            } catch (err) {
+                alert("Hiba történt a törlés során!");
+            }
+        }
+    });
+}
 
 // ============================================================
 // 4. JÁTÉKMENET – INIT  (index.html)
@@ -249,8 +284,33 @@ if (document.getElementById('options-container')) {
     if (savedBook) {
         try {
             bookChapters = JSON.parse(savedBook);
-            generalKalandlap();
-            loadChapter("1");
+            
+            // Okos betöltés: ha van már mentett karakter, azt töltjük be, nem generálunk újat!
+            let savedChar = null;
+            try { savedChar = localStorage.getItem('kjk_character'); } catch(_) {}
+            
+            if (savedChar) {
+                const charData = JSON.parse(savedChar);
+                maxStats = charData.maxStats;
+                inventoryItems = charData.inventory || new Array(9).fill(null);
+                
+                // UI frissítése a mentett értékekkel
+                updateStat("skill", charData.stats.skill);
+                updateStat("stamina", charData.stats.stamina);
+                updateStat("luck", charData.stats.luck);
+                
+                const staminaMaxEl = document.getElementById("stamina-max");
+                if (staminaMaxEl) staminaMaxEl.textContent = `/ ${maxStats.stamina}`;
+                renderInventory();
+            } else {
+                // Ha még nincs karakter, most generálunk először
+                generalKalandlap();
+            }
+
+            // Aktuális fejezet betöltése (alapból az 1-es, vagy ahol tartott)
+            let currentChapter = localStorage.getItem('kjk_current_chapter') || "1";
+            loadChapter(currentChapter);
+
         } catch (err) {
             document.getElementById("description").textContent =
                 "Hiba a könyv adatok beolvasásakor. Kérlek, töltsd be újra a fájlt!";
@@ -266,10 +326,6 @@ if (document.getElementById('options-container')) {
 // 5. KALANDLAP  – stat generálás és megjelenítés
 // ============================================================
 
-/**
- * Új Kalandlap generálása kockadobás alapján (KJK szabályok szerint).
- * Beállítja a maxStats értékeket, nullázza a leltárt.
- */
 function generalKalandlap() {
     const skill   = rollDice(1, 6) + 6;   // 7–12
     const stamina = rollDice(2, 6) + 12;  // 14–24
@@ -277,16 +333,26 @@ function generalKalandlap() {
 
     maxStats = { skill, stamina, luck };
 
+    // Leltár nullázása
+    inventoryItems = new Array(9).fill(null);
+    
+    // Kezdeti mentés objektum strukturálása
+    try {
+        const charState = {
+            stats: { skill, stamina, luck },
+            maxStats: maxStats,
+            inventory: inventoryItems
+        };
+        localStorage.setItem('kjk_character', JSON.stringify(charState));
+    } catch(_) {}
+
     updateStat("skill",   skill);
     updateStat("stamina", stamina);
     updateStat("luck",    luck);
 
-    // Maximális életerő megjelenítése (pl. "/ 18")
     const staminaMaxEl = document.getElementById("stamina-max");
     if (staminaMaxEl) staminaMaxEl.textContent = `/ ${stamina}`;
 
-    // Leltár nullázása
-    inventoryItems = new Array(9).fill(null);
     renderInventory();
 }
 
@@ -295,12 +361,6 @@ function generalKalandlap() {
 // 6. FEJEZET BETÖLTÉSE
 // ============================================================
 
-/**
- * Betölti az adott azonosítójú fejezetet:
- *  – Megmutatja a szöveget
- *  – Végrehajtja az opcionális tárgyakciót
- *  – Legenerálja az opciógombokat (normál / harc / szerencse-próba)
- */
 function loadChapter(chapterId) {
     const chapter = bookChapters[chapterId];
     if (!chapter) {
@@ -311,18 +371,17 @@ function loadChapter(chapterId) {
         return;
     }
 
-    // Cím és szöveg
+    // Elmentjük, épp melyik fejezetben jár a játékos
+    try { localStorage.setItem('kjk_current_chapter', chapterId); } catch(_) {}
+
     const titleEl = document.getElementById("chapter-title");
     const descEl  = document.getElementById("description");
     if (titleEl) titleEl.textContent = `${chapterId}. fejezet`;
     if (descEl)  descEl.textContent  = chapter.text;
 
-    // Harci panel elrejtése
     const fightBox = document.getElementById("fight");
     if (fightBox) fightBox.style.display = "none";
 
-    // ── Tárgyakció végrehajtása ──────────────────────────────
-    // A fejezet betöltésekor azonnal feldolgozzuk (pl. "itt egy kard")
     if (chapter.itemAction) {
         const ia = chapter.itemAction;
         if (ia.type === 'add') {
@@ -332,7 +391,6 @@ function loadChapter(chapterId) {
         }
     }
 
-    // ── Opciógombok generálása ───────────────────────────────
     const container = document.getElementById("options-container");
     if (!container) return;
     container.innerHTML = "";
@@ -349,32 +407,24 @@ function loadChapter(chapterId) {
         const button = document.createElement("button");
         button.className = "option-btn";
 
-        // ── 7. SZERENCSE-PRÓBA GOMB ──────────────────────────
-        // Formátum: luck_test:sikerFejezet:kudarcFejezet
         if (option.target.startsWith("luck_test:")) {
             const ltParts        = option.target.substring(10).split(':');
             const successChapter = ltParts[0];
             const failChapter    = ltParts[1];
 
             button.classList.add("luck-btn");
-            button.innerHTML =
-                `<i class="fa-solid fa-clover"></i> ${option.text} `
-                + `<em class="luck-hint">(Szerencse-próba)</em>`;
+            button.innerHTML = `<i class="fa-solid fa-clover"></i> ${option.text} <em class="luck-hint">(Szerencse-próba)</em>`;
 
             button.addEventListener("click", function () {
                 button.disabled = true;
                 runLuckTest(successChapter, failChapter);
             });
 
-        // ── HARC GOMB ────────────────────────────────────────
-        // Formátum: fight_NévRész_Ügyesség_Életerő_KövetkezőFejezet
-        //     vagy: fight_NévRész_Ügyesség_Életerő_KövetkezőFejezet_MenekülésiFejezet
         } else if (option.target.startsWith("fight_")) {
-            const raw   = option.target.substring(6);  // "fight_" levágása
+            const raw   = option.target.substring(6);
             const parts = raw.split('_');
 
             if (parts.length < 4) {
-                // Minimálisan: NÉV + skill + stamina + next = 4 rész
                 button.textContent = option.text + " (⚠ hibás harc-formátum)";
                 button.disabled = true;
                 container.appendChild(button);
@@ -384,14 +434,12 @@ function loadChapter(chapterId) {
             let nextChapter, escapeChapter = null, stamina, skill, name;
 
             if (parts.length >= 5) {
-                // 5+ rész → az utolsó a menekülési fejezet
                 escapeChapter = parts[parts.length - 1];
                 nextChapter   = parts[parts.length - 2];
                 stamina       = parseInt(parts[parts.length - 3]);
                 skill         = parseInt(parts[parts.length - 4]);
                 name          = parts.slice(0, parts.length - 4).join(' ');
             } else {
-                // 4 rész → nincs menekülés
                 nextChapter = parts[parts.length - 1];
                 stamina     = parseInt(parts[parts.length - 2]);
                 skill       = parseInt(parts[parts.length - 3]);
@@ -403,7 +451,6 @@ function loadChapter(chapterId) {
                 startBattle(name, skill, stamina, nextChapter, escapeChapter);
             });
 
-        // ── NORMÁL FEJEZET GOMB ──────────────────────────────
         } else {
             button.textContent = option.text;
             button.addEventListener("click", function () {
@@ -423,13 +470,14 @@ function loadChapter(chapterId) {
 // 7. LELTÁRRENDSZER
 // ============================================================
 
-/**
- * Tárgy hozzáadása az első üres slotba.
- * Ha a hátizsák tele, toast-értesítőt mutat.
- * @param {string}      name      - Tárgy neve
- * @param {string|null} statType  - 'skill' | 'stamina' | 'luck' | null
- * @param {number}      statValue - Stat-változás (pl. 4 vagy -2)
- */
+function saveInventory() {
+    try {
+        let charState = JSON.parse(localStorage.getItem('kjk_character') || '{}');
+        charState.inventory = inventoryItems;
+        localStorage.setItem('kjk_character', JSON.stringify(charState));
+    } catch(_) {}
+}
+
 function addItem(name, statType, statValue) {
     const emptySlot = inventoryItems.findIndex(i => i === null);
     if (emptySlot === -1) {
@@ -441,53 +489,37 @@ function addItem(name, statType, statValue) {
         statType:  statType  || null,
         statValue: statValue || 0
     };
+    saveInventory();
     renderInventory();
     showToast(`📦 Felvéve: ${name}`);
 }
 
-/**
- * Tárgy eltávolítása a leltárból név alapján.
- * Ha nem találja (pl. már elfogyasztotta a játékos), csendben nem csinál semmit.
- * @param {string} name - A tárgy neve (pontosan egyezzen)
- */
 function removeItem(name) {
     const idx = inventoryItems.findIndex(i => i && i.name === name);
-    if (idx === -1) return; // Nincs ilyen tárgy – nem hiba
+    if (idx === -1) return;
     inventoryItems[idx] = null;
+    saveInventory();
     renderInventory();
     showToast(`🗑 Elveszítve: ${name}`);
 }
 
-/**
- * Tárgy használata/elfogyasztása a megadott slotból.
- * – Ha van stat-hatása: módosítja a stat-ot (max-ig), eltávolítja a tárgyat.
- * – Ha nincs stat-hatása: csak infó toast, a tárgy marad a leltárban.
- * @param {number} slotIdx - Slot sorszáma (0-8)
- */
 function useItem(slotIdx) {
     const item = inventoryItems[slotIdx];
     if (!item) return;
 
     if (item.statType && item.statValue !== 0) {
-        // Fogyasztható tárgy: stat módosítása és eltávolítás
         const curVal = getStatValue(`${item.statType}-val`);
         const newVal = updateStat(item.statType, curVal + item.statValue);
         const sign   = item.statValue > 0 ? '+' : '';
-        showToast(
-            `✨ ${item.name} elfogyasztva!  ${sign}${item.statValue} ${statLabel(item.statType)}`
-            + `  (${statLabel(item.statType)}: ${newVal})`
-        );
+        showToast(`✨ ${item.name} elfogyasztva!  ${sign}${item.statValue} ${statLabel(item.statType)}  (${statLabel(item.statType)}: ${newVal})`);
         inventoryItems[slotIdx] = null;
+        saveInventory();
         renderInventory();
     } else {
-        // Nem fogyasztható tárgy (pl. kulcs, kristálygolyó): marad a leltárban
         showToast(`🔍 ${item.name} — kulcstárgy, nem fogyasztható.`);
     }
 }
 
-/**
- * Újrarajzolja az összes inventory slotot az inventoryItems tömb alapján.
- */
 function renderInventory() {
     for (let i = 0; i < 9; i++) {
         const slot = document.getElementById(`slot-${i}`);
@@ -499,13 +531,11 @@ function renderInventory() {
             slot.className = 'item-slot has-item';
             slot.innerHTML = '';
 
-            // Tárgy neve (flex: 1, overflow: ellipsis)
             const nameSpan = document.createElement('span');
             nameSpan.className = 'item-name';
             nameSpan.textContent = item.name;
             slot.appendChild(nameSpan);
 
-            // Stat-badge jobb felső sarokban
             if (item.statType && item.statValue) {
                 const badge = document.createElement('span');
                 badge.className = `item-stat-badge badge-${item.statType}`;
@@ -516,10 +546,8 @@ function renderInventory() {
                 slot.title = `${item.name} — kulcstárgy`;
             }
 
-            // Kattintás: tárgy használata
             slot.onclick = () => useItem(i);
 
-            // Felvétel animáció
             void slot.offsetWidth;
             slot.classList.add('item-added');
             setTimeout(() => slot.classList.remove('item-added'), 400);
@@ -533,7 +561,6 @@ function renderInventory() {
     }
 }
 
-/** Segéd: előjel-stringet ad vissza ('+' vagy ''). */
 function sign(n) { return n > 0 ? '+' : ''; }
 
 
@@ -541,34 +568,20 @@ function sign(n) { return n > 0 ? '+' : ''; }
 // 8. SZERENCSE-PRÓBA  (Luck test)
 // ============================================================
 
-/**
- * Elvégez egy szerencse-próbát (KJK szabályok szerint):
- *  1. Dob 2d6-ot
- *  2. Ha eredmény ≤ aktuális Szerencse → siker (successChapter)
- *     Ha eredmény >  aktuális Szerencse → kudarc (failChapter)
- *  3. A Szerencse azután mindig csökken 1-gyel (siker esetén is!)
- *
- * @param {string} successChapter - Sikeres fejezet azonosítója
- * @param {string} failChapter    - Sikertelen fejezet azonosítója
- */
 function runLuckTest(successChapter, failChapter) {
     const roll     = rollDice(2, 6);
     const curLuck  = getStatValue("luck-val");
-    const newLuck  = updateStat("luck", curLuck - 1); // Szerencse mindig csökken!
+    const newLuck  = updateStat("luck", curLuck - 1);
     const success  = roll <= curLuck;
 
     if (success) {
-        showToast(
-            `🍀 Szerencse-próba SIKERES! (${roll} ≤ ${curLuck})  –  Szerencse: ${newLuck}`
-        );
+        showToast(`🍀 Szerencse-próba SIKERES! (${roll} ≤ ${curLuck})  –  Szerencse: ${newLuck}`);
         setTimeout(() => {
             loadChapter(successChapter);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 1600);
     } else {
-        showToast(
-            `💔 Szerencse-próba SIKERTELEN! (${roll} > ${curLuck})  –  Szerencse: ${newLuck}`
-        );
+        showToast(`💔 Szerencse-próba SIKERTELEN! (${roll} > ${curLuck})  –  Szerencse: ${newLuck}`);
         setTimeout(() => {
             loadChapter(failChapter);
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -581,58 +594,41 @@ function runLuckTest(successChapter, failChapter) {
 // 9. HARCI RENDSZER
 // ============================================================
 
-/**
- * Elindít egy harcot.
- * @param {string}      name          - Ellenség neve
- * @param {number}      skill         - Ellenség Ügyessége
- * @param {number}      stamina       - Ellenség kezdeti Életereje
- * @param {string}      nextChapter   - Győzelem utáni fejezet
- * @param {string|null} escapeChapter - Menekülési fejezet (null = nem menekülhetsz)
- */
 function startBattle(name, skill, stamina, nextChapter, escapeChapter) {
-    // Ellenség adatok inicializálása
     currentEnemy = {
         name,
         skill,
         stamina,
-        maxStamina:  stamina,   // HP-bar számításhoz megőrizzük a kezdeti értéket
+        maxStamina:  stamina,
         next:        nextChapter,
         escape:      escapeChapter || null
     };
 
-    // Ellenség UI
     setStatDisplay("enemy-name",    name);
     setStatDisplay("enemy-stamina", stamina);
     updateEnemyHpBar();
 
-    // Játékos aktuális ÉP
     const playerStamina = getStatValue("stamina-val");
     setStatDisplay("fight-player-stamina", playerStamina);
     updatePlayerHpBar(playerStamina);
 
-    // Kocka és dobáseredmény szövegek visszaállítása
     resetDice();
     setStatDisplay("player-dice-result", "—");
     setStatDisplay("enemy-dice-result",  "—");
 
-    // Csata log
     const battleLog = document.getElementById("battle-log");
     if (battleLog) battleLog.textContent = "⚔ Csata kezdődik! Dobj a kockával!";
 
-    // Harci panel megmutatása + scrollozás
     const fightBox = document.getElementById("fight");
     if (fightBox) {
         fightBox.style.display = "block";
         setTimeout(() => fightBox.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
     }
 
-    // ── Menekülés gomb ───────────────────────────────────────
-    // Csak akkor jelenik meg, ha a harc-parancsban van megadva escape-fejezet.
     const escapeBtn = document.getElementById("escape-btn");
     if (escapeBtn) {
         if (escapeChapter) {
             escapeBtn.style.display = "inline-flex";
-            // Klónozzuk, hogy a korábbi eseménykezelők ne halmozódjanak
             const newEscapeBtn = escapeBtn.cloneNode(true);
             escapeBtn.parentNode.replaceChild(newEscapeBtn, escapeBtn);
             newEscapeBtn.addEventListener("click", function () {
@@ -643,10 +639,8 @@ function startBattle(name, skill, stamina, nextChapter, escapeChapter) {
         }
     }
 
-    // ── Kockadobás gomb ──────────────────────────────────────
     const diceBtn = document.getElementById("dice-btn");
     if (!diceBtn) return;
-    // Klónozás az eseményhalmozódás ellen
     const newDiceBtn = diceBtn.cloneNode(true);
     diceBtn.parentNode.replaceChild(newDiceBtn, diceBtn);
     newDiceBtn.addEventListener("click", function () {
@@ -655,12 +649,6 @@ function startBattle(name, skill, stamina, nextChapter, escapeChapter) {
     });
 }
 
-/**
- * Menekülés a harcból:
- *  – Automatikusan 2 ÉP büntetés
- *  – Ha emiatt meghal a játékos: halál-kezeld
- *  – Különben: betöltődik az escape fejezet
- */
 function handleEscape(escapeChapter) {
     const curStamina = getStatValue("stamina-val");
     const newStamina = updateStat("stamina", curStamina - 2);
@@ -681,52 +669,35 @@ function handleEscape(escapeChapter) {
     }
 }
 
-/**
- * Egy harcköröt fut le:
- *  1. Dob 2×1d6-ot a játékosnak és 2d6-ot az ellenfélnek
- *  2. Animálja mindkét 3D kockát
- *  3. Kiszámítja és kiírja az eredményt
- *  4. Kezeli a győzelmet / halált
- */
 function battleRound(onRoundComplete) {
     const battleLog = document.getElementById("battle-log");
 
-    // ── Kockadobások ─────────────────────────────────────────
-    const pRoll1 = rollDice(1, 6);  // Játékos 1. kockája
-    const pRoll2 = rollDice(1, 6);  // Játékos 2. kockája
-    const pRoll  = pRoll1 + pRoll2; // Összeg (2d6)
-    const eRoll  = rollDice(2, 6);  // Ellenség 2d6
+    const pRoll1 = rollDice(1, 6);
+    const pRoll2 = rollDice(1, 6);
+    const pRoll  = pRoll1 + pRoll2;
+    const eRoll  = rollDice(2, 6);
 
     if (battleLog) battleLog.textContent = "🎲 A kockák pörögnek...";
 
-    // ── 3D kocka animáció (mindkét kocka) ───────────────────
-    // A két kocka a játékos két dobott értékét mutatja
     animateDice(pRoll1, pRoll2, () => {
-
         const playerSkill   = getStatValue("skill-val");
         const playerStamina = getStatValue("stamina-val");
 
         const playerAtk = playerSkill + pRoll;
         const enemyAtk  = currentEnemy.skill + eRoll;
 
-        // Dobáseredmény kiírása a combatant-blokkok alá
         setStatDisplay("player-dice-result", `${pRoll1}+${pRoll2}=${pRoll} (Ü:${playerSkill})`);
         setStatDisplay("enemy-dice-result",  `${eRoll} (Ü:${currentEnemy.skill})`);
 
-        // ── Harci log és sérülés ─────────────────────────────
-        let log =
-            `🎲 Te: ${pRoll1} + ${pRoll2} = ${pRoll}  →  Támadás: ${playerAtk}\n`
-          + `🎲 ${currentEnemy.name}: ${eRoll}  →  Támadás: ${enemyAtk}\n`;
+        let log = `🎲 Te: ${pRoll1} + ${pRoll2} = ${pRoll}  →  Támadás: ${playerAtk}\n🎲 ${currentEnemy.name}: ${eRoll}  →  Támadás: ${enemyAtk}\n`;
 
         if (playerAtk > enemyAtk) {
-            // Játékos megsebezte az ellenfelet
             currentEnemy.stamina = Math.max(0, currentEnemy.stamina - 2);
             setStatDisplay("enemy-stamina", currentEnemy.stamina);
             updateEnemyHpBar();
             log += `✔ Megsebezted! (${currentEnemy.name} ÉP: ${currentEnemy.stamina})`;
 
         } else if (enemyAtk > playerAtk) {
-            // Ellenség megsebezte a játékost
             const newStamina = updateStat("stamina", playerStamina - 2);
             log += `✘ Megsebzett! (Életerőd: ${newStamina})`;
 
@@ -736,7 +707,6 @@ function battleRound(onRoundComplete) {
 
         if (battleLog) battleLog.textContent = log;
 
-        // ── Győzelem ─────────────────────────────────────────
         if (currentEnemy.stamina <= 0) {
             if (battleLog) battleLog.textContent += "\n\n🏆 GYŐZELEM! Továbblépés...";
             setTimeout(() => {
@@ -746,21 +716,22 @@ function battleRound(onRoundComplete) {
             return;
         }
 
-        // ── Halál ────────────────────────────────────────────
         if (getStatValue("stamina-val") <= 0) {
             if (battleLog) battleLog.textContent += "\n\n💀 MEGHALTÁL! A kaland véget ért.";
             setTimeout(() => handlePlayerDeath(), 2000);
             return;
         }
 
-        // Ha még tart a meccs, a gomb újra aktív lesz
         if (onRoundComplete) onRoundComplete();
     });
 }
 
-/** Halál kezelése: visszakérdez, majd újraindít. */
 function handlePlayerDeath() {
     if (confirm("A játéknak vége. Újrakezded az elejéről?")) {
+        try {
+            localStorage.removeItem('kjk_character');
+            localStorage.removeItem('kjk_current_chapter');
+        } catch(_) {}
         generalKalandlap();
         loadChapter("1");
         const fightBox = document.getElementById("fight");
@@ -774,41 +745,26 @@ function handlePlayerDeath() {
 // 10. 3D KOCKA ANIMÁCIÓ (két kocka)
 // ============================================================
 
-/**
- * Visszaállítja mindkét kockát az 1-es lapra (animáció nélkül).
- */
 function resetDice() {
     ['dice-cube-1', 'dice-cube-2'].forEach(id => {
         const cube = document.getElementById(id);
         if (!cube) return;
         cube.className = '';
-        void cube.offsetWidth; // reflow
+        void cube.offsetWidth;
         cube.classList.add('face-1');
     });
 }
 
-/**
- * Elindítja mindkét kocka CSS-animációját, majd beállítja
- * a végső lapot a dobott értéknek megfelelően.
- *
- * A második kocka kis késéssel (120 ms) indul, hogy természetesebb legyen.
- *
- * @param {number}   val1     - 1. kocka értéke (1–6)
- * @param {number}   val2     - 2. kocka értéke (1–6)
- * @param {Function} callback - Hívódik az animáció lefutása után
- */
 function animateDice(val1, val2, callback) {
     const cube1 = document.getElementById('dice-cube-1');
     const cube2 = document.getElementById('dice-cube-2');
 
-    // 1. kocka animáció indítása
     if (cube1) {
         cube1.className = '';
-        void cube1.offsetWidth; // reflow kényszerítése
+        void cube1.offsetWidth;
         cube1.classList.add('rolling');
     }
 
-    // 2. kocka kis késéssel (természetesebb hatás)
     setTimeout(() => {
         if (cube2) {
             cube2.className = '';
@@ -817,7 +773,7 @@ function animateDice(val1, val2, callback) {
         }
     }, 120);
 
-    // Animáció vége (0.8s) + a 120ms késés → 950ms
+    // Animáció lefutása után végső lapok beállítása
     setTimeout(() => {
         if (cube1) {
             cube1.classList.remove('rolling');

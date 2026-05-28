@@ -1,0 +1,90 @@
+/* ==========================================================================
+   CSS VÁLTOZÓK
+   ========================================================================== */
+:root {
+    --bg-dark:        #0a0601;
+    --bg-card:        #1a1d1f;
+    --bg-book:        #1e2328;
+    --border-bronze:  #4a3820;
+    --border-gold:    #c9912a;
+    --border-orange:  #c0621a;
+    --border-blue:    #3d5f8f;
+    --border-red:     #8b1a1a;
+    --text-main:      #e8dcc8;
+    --text-muted:     #a89880;
+    --text-light:     #f0e8d8;
+    --accent-gold:    #e0a830;
+    --accent-orange:  #d4721e;
+    --accent-blue:    #5080b8;
+    --accent-red:     #c0362a;
+    --accent-green:   #6aaa6a;
+    --btn-bg:         #243040;
+    --btn-border:     #304058;
+    --btn-shadow:     #101820;
+    --btn-hover:      #304058;
+    --gap:            18px;
+    --radius:         10px;
+    --font-title:     'MedievalSharp', 'Georgia', serif;
+    --font-body:      'IM Fell English', 'Georgia', serif;
+}
+
+/* ==========================================================================
+   RESET & ALAP
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; }
+
+body {
+    background:
+        radial-gradient(ellipse at 20% 80%, rgba(60,30,5,0.6) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(10,20,30,0.5) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0601 0%, #130d04 35%, #1a1205 65%, #0a0e08 100%);
+    min-height: 100vh;
+    font-family: var(--font-body);
+    color: var(--text-main);
+    padding: 20px;
+}
+
+/* Pergamen textúra overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar              { width: 5px; height: 5px; }
+::-webkit-scrollbar-track        { background: rgba(0,0,0,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb        { background: var(--border-bronze); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover  { background: var(--accent-blue); }
+
+/* TOAST ÉRTESÍTŐ */
+#item-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(20,15,8,0.96);
+    border: 1px solid var(--border-orange);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    z-index: 1000;
+    pointer-events: none;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1), opacity 0.3s;
+    opacity: 0;
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+}
+
+#item-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}

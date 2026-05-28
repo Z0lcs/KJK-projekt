@@ -1,0 +1,241 @@
+/* ==========================================================================
+   KALANDLAP (STATISZTIKÁK)
+   ========================================================================== */
+#player-static {
+    border-color: var(--border-gold);
+    flex-shrink: 0;
+    background: linear-gradient(160deg, #1e1a0e 0%, #1a1d1f 100%);
+}
+
+#player-static h3,
+#inventory h3 {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#player-static h3 {
+    color: var(--accent-gold);
+    border-color: var(--border-gold);
+}
+
+#inventory h3 {
+    color: var(--accent-orange);
+    border-color: var(--border-orange);
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    font-size: 0.88rem;
+    width: 100%;
+}
+
+.stat-values-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-family: var(--font-title);
+    min-width: 60px;
+    justify-content: flex-end;
+}
+
+.stat-label {
+    color: var(--text-muted);
+}
+
+.stat-values {
+    display: flex;
+    align-items: baseline;
+    justify-content: flex-end;
+    min-width: 65px;
+    gap: 4px;
+}
+
+.stat-num {
+    font-family: var(--font-title);
+    color: var(--accent-gold);
+    font-size: 1rem;
+    text-align: right;
+}
+
+.stat-max {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.stat-bar-wrap {
+    height: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 3px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.stat-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(.4, 0, .2, 1);
+    width: 0%;
+}
+
+.skill-bar {
+    background: linear-gradient(90deg, #c9912a, #f0c060);
+    box-shadow: 0 0 6px rgba(224, 168, 48, 0.5);
+}
+
+.stamina-bar {
+    background: linear-gradient(90deg, #8b1a1a, #d44040);
+    box-shadow: 0 0 6px rgba(192, 54, 42, 0.5);
+}
+
+.luck-bar {
+    background: linear-gradient(90deg, #2a6030, #50b870);
+    box-shadow: 0 0 6px rgba(106, 170, 106, 0.5);
+}
+
+/* ==========================================================================
+   HÁTIZSÁK (INVENTORY)
+   ========================================================================== */
+#inventory {
+    border-color: var(--border-orange);
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+    background: linear-gradient(160deg, #1e1508 0%, #1a1d1f 100%);
+}
+
+#inventory-slots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 2px;
+}
+
+.item-slot {
+    background: #0e1012;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 7px 9px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+}
+
+.item-slot.empty {
+    border-style: dashed;
+    border-color: #222;
+    opacity: 0.4;
+}
+
+.item-slot.has-item {
+    border-color: var(--border-orange);
+    color: var(--text-light);
+    background: linear-gradient(135deg, #1a1005 0%, #0e1012 100%);
+    cursor: pointer;
+    opacity: 1;
+}
+
+.item-slot.has-item:hover {
+    border-color: var(--accent-orange);
+    background: linear-gradient(135deg, #28180a 0%, #151a1f 100%);
+    box-shadow: 0 0 10px rgba(212, 114, 30, 0.2);
+    transform: translateY(-1px);
+}
+
+.item-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+
+.item-stat-badge {
+    position: absolute;
+    right: 5px;
+    top: 4px;
+    font-size: 0.68rem;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.badge-skill {
+    background: rgba(201, 145, 42, 0.25);
+    color: var(--accent-gold);
+}
+
+.badge-stamina {
+    background: rgba(192, 54, 42, 0.25);
+    color: #e05050;
+}
+
+.badge-luck {
+    background: rgba(106, 170, 106, 0.25);
+    color: var(--accent-green);
+}
+
+@keyframes item-pop {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    70% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.item-slot.item-added {
+    animation: item-pop 0.35s ease;
+}
+
+/* Reset gomb egyedi stílusa */
+.reset-btn {
+    background-color: #1a0f0f !important;
+    border-color: #582020 !important;
+    color: #cca3a3 !important;
+    transition: all 0.25s ease-in-out;
+}
+
+.reset-btn:hover:not(:disabled) {
+    background-color: #2b1414 !important;
+    border-color: var(--accent-red) !important;
+    color: var(--text-light) !important;
+    box-shadow: 0 0 12px rgba(192, 54, 42, 0.3) !important;
+}
+
+.reset-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

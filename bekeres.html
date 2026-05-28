@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="hu">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KJK project</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=IM+Fell+English:ital@0;1&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="stlye.css">
+    <link rel="stylesheet" href="CSS/stlye.css">
     <script src="script.js" defer></script>
 </head>
+
 <body>
     <div class="fullscreen-wrapper">
 
@@ -26,6 +29,10 @@
 
             <div class="options-container">
                 <input class="option-btn file-input" type="file" id="fileButton" accept=".txt">
+                <button id="resetGameButton" class="option-btn reset-btn"
+                    title="Minden mentett játékállapot, karakter és könyv törlése">
+                    <i class="fa-solid fa-trash-can"></i> Játék resetelése
+                </button>
             </div>
 
             <div class="format-guide">
@@ -39,7 +46,8 @@
                     <pre class="example-text">1 | Szöveg... | Opció:2 | add_item:Kard:skill:2
 1 | Szöveg... | Opció:2 | remove_item:Kard
 1 | Szöveg... | Opció:2 | add_item:Élelem:stamina:4</pre>
-                    <p>Tárgy stathatásai: <code>skill</code>, <code>stamina</code>, <code>luck</code> (pozitív vagy negatív szám)</p>
+                    <p>Tárgy stathatásai: <code>skill</code>, <code>stamina</code>, <code>luck</code> (pozitív vagy
+                        negatív szám)</p>
                 </details>
             </div>
 
@@ -54,4 +62,5 @@
 
     </div>
 </body>
+
 </html>

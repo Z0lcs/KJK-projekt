@@ -1,0 +1,66 @@
+/* ==========================================================================
+   RESZPONZÍV – TABLET (MAX 900PX)
+   ========================================================================== */
+@media (max-width: 900px) {
+    body { padding: 12px; }
+
+    .main-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 12px;
+        margin-top: 54px;
+    }
+
+    .left-column {
+        padding-top: 0;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #player-static { flex: 1 1 200px; }
+    #inventory     { flex: 2 1 250px; max-height: 260px; overflow-y: auto; }
+    #book          { height: auto; min-height: 300px; max-height: 58vh; }
+
+    #combatants { grid-template-columns: 1fr auto 1fr; gap: 10px; }
+    #dice-scenes { gap: 20px; }
+}
+
+/* ==========================================================================
+   RESZPONZÍV – MOBIL (MAX 600PX)
+   ========================================================================== */
+@media (max-width: 600px) {
+    html { font-size: 15px; }
+    body { padding: 10px; }
+
+    .main-container { margin-top: 50px; gap: 10px; }
+    .left-column    { flex-direction: column; }
+
+    #player-static, #inventory, #book { padding: 14px; }
+    #inventory     { max-height: 190px; overflow-y: auto; }
+    #book          { max-height: 52vh; }
+    #book h2       { font-size: 1.2rem; }
+    #description   { font-size: 0.95rem; line-height: 1.8; }
+
+    .options-container { flex-direction: column; align-items: stretch; }
+    .option-btn, #continue, #dice-btn, #escape-btn { width: 100%; padding: 13px 14px; }
+
+    #combatants { grid-template-columns: 1fr; gap: 8px; }
+    #vs-label   { display: none; }
+    #fight      { padding: 14px; }
+    #pop-up     { padding: 24px 16px; }
+
+    /* Kockák átméretezése mobilon */
+    .dice-scene { width: 56px; height: 56px; perspective: 240px; }
+    #dice-cube-1, #dice-cube-2, .dice-cube, .face { width: 56px; height: 56px; }
+
+    #dice-cube-1 .face.front,  #dice-cube-2 .face.front  { transform: rotateY(0deg) translateZ(28px); }
+    #dice-cube-1 .face.back,   #dice-cube-2 .face.back   { transform: rotateY(180deg) translateZ(28px); }
+    #dice-cube-1 .face.right,  #dice-cube-2 .face.right  { transform: rotateY(90deg) translateZ(28px); }
+    #dice-cube-1 .face.left,   #dice-cube-2 .face.left   { transform: rotateY(-90deg) translateZ(28px); }
+    #dice-cube-1 .face.top,    #dice-cube-2 .face.top    { transform: rotateX(90deg) translateZ(28px); }
+    #dice-cube-1 .face.bottom, #dice-cube-2 .face.bottom { transform: rotateX(-90deg) translateZ(28px); }
+
+    #dice-scenes { gap: 16px; }
+    #fight-buttons { flex-direction: column; align-items: stretch; }
+}

@@ -1,0 +1,10 @@
+/* ==========================================================================
+   FŐ STÍLUSLAP GYŰJTŐ (MODULOK BEOLVASÁSA)
+   ========================================================================== */
+
+@import url('base.css');
+@import url('layout.css');
+@import url('game-elements.css');
+@import url('combat-dice.css');
+@import url('pop-up.css');
+@import url('responsive.css');
