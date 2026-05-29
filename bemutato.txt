@@ -1,13 +1,13 @@
-1 | Egy sötét és pókhálós kazamata mélyén térsz magadhoz. A falakon fáklyák csonkjai meredeznek, a távolból láncok csörgése hallatszik. A sarokban egy rozsdás, de még használható Kard hever. Előtted egy súlyos vaskapu áll. Mit teszel? | Felveszed a Kardot a sarokból:1a | Rögtön a vaskapuhoz mész:3
+1 | Egy sötét és pókhálós kazamata mélyén térsz magadhoz. A falakon fáklyák csonkjai meredeznek, a távolból láncok csörgése hallatszik. A sarokban egy rozsdás, de még használható Kard hever. Előtted egy súlyos vaskapu áll. Mit teszel? | Felveszed a Kardot a sarokból:1a , Rögtön a vaskapuhoz mész:3
 1a | Erősen markolod a kard nyelét, érzed, ahogy visszatér beléd a harci szellem. (+2 Ügyesség) | Tovább a vaskapuhoz:3 | add_item:Kard:skill:2
-2 | A láda teteje reccsenve törik be. Odabent egy poros üvegcsét találsz: egy Gyógyital! Elrakod a hátizsákodba. | Visszamész a kapuhoz:3 | Tovább kutakodsz:3 | add_item:Gyógyital:stamina:4
+2 | A láda teteje reccsenve törik be. Odabent egy poros üvegcsét találsz: egy Gyógyital! Elrakod a hátizsákodba. | Visszamész a kapuhoz:3 , Tovább kutakodsz:3 | add_item:Gyógyital:stamina:4
 3 | A kapu csikorogva kitárul. Egy hosszú folyosóra érsz. Hirtelen egy kattanást hallasz a talpad alatt: egy nyomólemezes csapdára léptél! Egy hatalmas ingapenge lendül feléd. | Megpróbálsz félreugrani (Szerencse-próba):luck_test:4:5
 4 | Az utolsó pillanatban sikerül laposra vetődnöd! Megkönnyebbülten sietsz tovább. | Továbbmész a folyosó végére:6
 5 | Későn reagáltál! A penge végighasítja a válladat. A fájdalomtól megszédülsz. | Rászorítod a kezed a sebre és továbbmész:6
 6 | A terem közepén egy kőoltár áll, rajta egy gyönyörű Arany Kulcs csillog. | Elveszed az Arany Kulcsot:7|add_item:Arany Kulcs:none:0
-7 | Ahogy a kulcs a hátizsákodba kerül, a padló megremeg. Egy hatalmas barlangi Troll lép elő! | Fegyvert rántasz!:fight_Barlangi Troll_9_10_8_9|Elmenekülsz:9
-8 | A Troll hatalmas üvöltéssel roskad a földre. A tetem mögött egy díszes kőajtót találsz. | Használod az Arany Kulcsot:10|Tovább:10
+7 | Ahogy a kulcs a hátizsákodba kerül, a padló megremeg. Egy hatalmas barlangi Troll lép elő! | Fegyvert rántasz!:fight_Barlangi Troll_9_10_8_9,Elmenekülsz:9
+8 | A Troll hatalmas üvöltéssel roskad a földre. A tetem mögött egy díszes kőajtót találsz. | Használod az Arany Kulcsot:10,Tovább mész:10
 9 | Pánikszerűen beveted magad a falon lévő szűk résbe. Menekülés közben a hátizsákod beleakad egy sziklába, és az Arany Kulcs kicsúszik belőle... | Lihegve biztonságba érsz:11|remove_item:Arany Kulcs
 10 | A kulcs tökéletesen illik a zárba. Az ajtó feltárul, a fény ömlik az arcodba. Kijutottál! | Vége:12
 11 | Biztonságban vagy, de a kulcs nélkül a Troll termében ragadtál. | Vége:12
-12 | | — Vége —
+12 | | — Vége — | Újraindítása:1

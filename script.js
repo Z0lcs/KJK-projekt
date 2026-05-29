@@ -15,15 +15,15 @@
 // 1. GLOBÁLIS ÁLLAPOT
 // ============================================================
 
-let bookChapters = {};   
+let bookChapters = {};
 
 let currentEnemy = {
-    name:        "",
-    skill:       0,
-    stamina:     0,
-    maxStamina:  0,   
-    next:        "1",
-    escape:      null // Menekülési fejezet azonosítója (vagy null)
+    name: "",
+    skill: 0,
+    stamina: 0,
+    maxStamina: 0,
+    next: "1",
+    escape: null // Menekülési fejezet azonosítója (vagy null)
 };
 
 let maxStats = { skill: 12, stamina: 24, luck: 12 };
@@ -64,7 +64,7 @@ function setStatDisplay(id, value) {
  * A három fő stat egységes frissítése és MENTÉSE
  */
 function updateStat(statName, value) {
-    const max     = maxStats[statName] || 1;
+    const max = maxStats[statName] || 1;
     const clamped = Math.max(0, Math.min(value, max));
 
     const valEl = document.getElementById(`${statName}-val`);
@@ -89,11 +89,11 @@ function updateStat(statName, value) {
 function saveCharacterState(currentValue, statName) {
     try {
         let charState = JSON.parse(localStorage.getItem('kjk_character') || '{}');
-        if(!charState.stats) charState.stats = {};
+        if (!charState.stats) charState.stats = {};
         charState.stats[statName] = currentValue;
         charState.maxStats = maxStats;
         localStorage.setItem('kjk_character', JSON.stringify(charState));
-    } catch (_) {}
+    } catch (_) { }
 }
 
 /** Állítja a játékos harci HP-sávját. */
@@ -136,7 +136,7 @@ if (fileButton) {
         const files = event.target.files;
         if (files.length === 0) return;
 
-        const file   = files[0];
+        const file = files[0];
         const reader = new FileReader();
 
         reader.onload = function (e) {
@@ -145,26 +145,26 @@ if (fileButton) {
                 .map(l => l.trim())
                 .filter(l => l !== '');
 
-            const statusEl   = document.getElementById("file-status");
+            const statusEl = document.getElementById("file-status");
             const continueEl = document.getElementById("continue");
 
             if (lines.length === 0) {
-                if (statusEl)   statusEl.textContent  = "⚠ A kiválasztott fájl üres!";
+                if (statusEl) statusEl.textContent = "⚠ A kiválasztott fájl üres!";
                 if (continueEl) continueEl.style.display = "none";
                 return;
             }
 
-            let parsedBook  = {};
+            let parsedBook = {};
             let parseErrors = 0;
 
             lines.forEach(line => {
                 const parts = line.split('|');
                 if (parts.length < 2) { parseErrors++; return; }
 
-                const id         = parts[0].trim();
-                const text       = parts[1].trim();
+                const id = parts[0].trim();
+                const text = parts[1].trim();
                 const optionsRaw = parts[2] ? parts[2].trim() : "";
-                const itemRaw    = parts[3] ? parts[3].trim() : "";
+                const itemRaw = parts[3] ? parts[3].trim() : "";
 
                 let options = [];
                 if (optionsRaw) {
@@ -172,7 +172,7 @@ if (fileButton) {
                         opt = opt.trim();
                         const lastColon = opt.lastIndexOf(':');
                         if (lastColon > 0) {
-                            const optText   = opt.substring(0, lastColon).trim();
+                            const optText = opt.substring(0, lastColon).trim();
                             const optTarget = opt.substring(lastColon + 1).trim();
                             if (optText && optTarget) {
                                 options.push({ text: optText, target: optTarget });
@@ -185,9 +185,9 @@ if (fileButton) {
                 if (itemRaw.startsWith("add_item:")) {
                     const iparts = itemRaw.substring(9).split(':');
                     itemAction = {
-                        type:      'add',
-                        name:      iparts[0] ? iparts[0].trim() : "Tárgy",
-                        statType:  iparts[1] ? iparts[1].trim() : null,
+                        type: 'add',
+                        name: iparts[0] ? iparts[0].trim() : "Tárgy",
+                        statType: iparts[1] ? iparts[1].trim() : null,
                         statValue: iparts[2] ? parseInt(iparts[2].trim()) : 0
                     };
                 } else if (itemRaw.startsWith("remove_item:")) {
@@ -205,17 +205,17 @@ if (fileButton) {
             const chapterCount = Object.keys(parsedBook).length;
 
             if (chapterCount === 0) {
-                if (statusEl)   statusEl.textContent     = "⚠ Nem sikerült fejezeteket beolvasni. Ellenőrizd a formátumot!";
+                if (statusEl) statusEl.textContent = "⚠ Nem sikerült fejezeteket beolvasni. Ellenőrizd a formátumot!";
                 if (continueEl) continueEl.style.display = "none";
                 return;
             }
 
             try {
                 localStorage.setItem('kjk_book', JSON.stringify(parsedBook));
-                if (statusEl)   statusEl.textContent     = `✓ ${chapterCount} fejezet betöltve: ${file.name}` + (parseErrors ? ` (${parseErrors} sor hibás)` : "");
+                if (statusEl) statusEl.textContent = `✓ ${chapterCount} fejezet betöltve: ${file.name}` + (parseErrors ? ` (${parseErrors} sor hibás)` : "");
                 if (continueEl) continueEl.style.display = "inline-block";
             } catch (err) {
-                if (statusEl)   statusEl.textContent     = "⚠ Nem sikerült menteni a böngésző memóriájába. Próbálj normál módban!";
+                if (statusEl) statusEl.textContent = "⚠ Nem sikerült menteni a böngésző memóriájába. Próbálj normál módban!";
                 if (continueEl) continueEl.style.display = "none";
             }
         };
@@ -279,26 +279,26 @@ if (resetBtn) {
 
 if (document.getElementById('options-container')) {
     let savedBook = null;
-    try { savedBook = localStorage.getItem('kjk_book'); } catch (_) {}
+    try { savedBook = localStorage.getItem('kjk_book'); } catch (_) { }
 
     if (savedBook) {
         try {
             bookChapters = JSON.parse(savedBook);
-            
+
             // Okos betöltés: ha van már mentett karakter, azt töltjük be, nem generálunk újat!
             let savedChar = null;
-            try { savedChar = localStorage.getItem('kjk_character'); } catch(_) {}
-            
+            try { savedChar = localStorage.getItem('kjk_character'); } catch (_) { }
+
             if (savedChar) {
                 const charData = JSON.parse(savedChar);
                 maxStats = charData.maxStats;
                 inventoryItems = charData.inventory || new Array(9).fill(null);
-                
+
                 // UI frissítése a mentett értékekkel
                 updateStat("skill", charData.stats.skill);
                 updateStat("stamina", charData.stats.stamina);
                 updateStat("luck", charData.stats.luck);
-                
+
                 const staminaMaxEl = document.getElementById("stamina-max");
                 if (staminaMaxEl) staminaMaxEl.textContent = `/ ${maxStats.stamina}`;
                 renderInventory();
@@ -327,15 +327,15 @@ if (document.getElementById('options-container')) {
 // ============================================================
 
 function generalKalandlap() {
-    const skill   = rollDice(1, 6) + 6;   // 7–12
+    const skill = rollDice(1, 6) + 6;   // 7–12
     const stamina = rollDice(2, 6) + 12;  // 14–24
-    const luck    = rollDice(1, 6) + 6;   // 7–12
+    const luck = rollDice(1, 6) + 6;   // 7–12
 
     maxStats = { skill, stamina, luck };
 
     // Leltár nullázása
     inventoryItems = new Array(9).fill(null);
-    
+
     // Kezdeti mentés objektum strukturálása
     try {
         const charState = {
@@ -344,11 +344,11 @@ function generalKalandlap() {
             inventory: inventoryItems
         };
         localStorage.setItem('kjk_character', JSON.stringify(charState));
-    } catch(_) {}
+    } catch (_) { }
 
-    updateStat("skill",   skill);
+    updateStat("skill", skill);
     updateStat("stamina", stamina);
-    updateStat("luck",    luck);
+    updateStat("luck", luck);
 
     const staminaMaxEl = document.getElementById("stamina-max");
     if (staminaMaxEl) staminaMaxEl.textContent = `/ ${stamina}`;
@@ -372,12 +372,12 @@ function loadChapter(chapterId) {
     }
 
     // Elmentjük, épp melyik fejezetben jár a játékos
-    try { localStorage.setItem('kjk_current_chapter', chapterId); } catch(_) {}
+    try { localStorage.setItem('kjk_current_chapter', chapterId); } catch (_) { }
 
     const titleEl = document.getElementById("chapter-title");
-    const descEl  = document.getElementById("description");
+    const descEl = document.getElementById("description");
     if (titleEl) titleEl.textContent = `${chapterId}. fejezet`;
-    if (descEl)  descEl.textContent  = chapter.text;
+    if (descEl) descEl.textContent = chapter.text;
 
     const fightBox = document.getElementById("fight");
     if (fightBox) fightBox.style.display = "none";
@@ -408,9 +408,9 @@ function loadChapter(chapterId) {
         button.className = "option-btn";
 
         if (option.target.startsWith("luck_test:")) {
-            const ltParts        = option.target.substring(10).split(':');
+            const ltParts = option.target.substring(10).split(':');
             const successChapter = ltParts[0];
-            const failChapter    = ltParts[1];
+            const failChapter = ltParts[1];
 
             button.classList.add("luck-btn");
             button.innerHTML = `<i class="fa-solid fa-clover"></i> ${option.text} <em class="luck-hint">(Szerencse-próba)</em>`;
@@ -421,7 +421,7 @@ function loadChapter(chapterId) {
             });
 
         } else if (option.target.startsWith("fight_")) {
-            const raw   = option.target.substring(6);
+            const raw = option.target.substring(6);
             const parts = raw.split('_');
 
             if (parts.length < 4) {
@@ -435,15 +435,15 @@ function loadChapter(chapterId) {
 
             if (parts.length >= 5) {
                 escapeChapter = parts[parts.length - 1];
-                nextChapter   = parts[parts.length - 2];
-                stamina       = parseInt(parts[parts.length - 3]);
-                skill         = parseInt(parts[parts.length - 4]);
-                name          = parts.slice(0, parts.length - 4).join(' ');
+                nextChapter = parts[parts.length - 2];
+                stamina = parseInt(parts[parts.length - 3]);
+                skill = parseInt(parts[parts.length - 4]);
+                name = parts.slice(0, parts.length - 4).join(' ');
             } else {
                 nextChapter = parts[parts.length - 1];
-                stamina     = parseInt(parts[parts.length - 2]);
-                skill       = parseInt(parts[parts.length - 3]);
-                name        = parts.slice(0, parts.length - 3).join(' ');
+                stamina = parseInt(parts[parts.length - 2]);
+                skill = parseInt(parts[parts.length - 3]);
+                name = parts.slice(0, parts.length - 3).join(' ');
             }
 
             button.textContent = option.text;
@@ -475,7 +475,7 @@ function saveInventory() {
         let charState = JSON.parse(localStorage.getItem('kjk_character') || '{}');
         charState.inventory = inventoryItems;
         localStorage.setItem('kjk_character', JSON.stringify(charState));
-    } catch(_) {}
+    } catch (_) { }
 }
 
 function addItem(name, statType, statValue) {
@@ -486,7 +486,7 @@ function addItem(name, statType, statValue) {
     }
     inventoryItems[emptySlot] = {
         name,
-        statType:  statType  || null,
+        statType: statType || null,
         statValue: statValue || 0
     };
     saveInventory();
@@ -510,7 +510,7 @@ function useItem(slotIdx) {
     if (item.statType && item.statValue !== 0) {
         const curVal = getStatValue(`${item.statType}-val`);
         const newVal = updateStat(item.statType, curVal + item.statValue);
-        const sign   = item.statValue > 0 ? '+' : '';
+        const sign = item.statValue > 0 ? '+' : '';
         showToast(`✨ ${item.name} elfogyasztva!  ${sign}${item.statValue} ${statLabel(item.statType)}  (${statLabel(item.statType)}: ${newVal})`);
         inventoryItems[slotIdx] = null;
         saveInventory();
@@ -555,8 +555,8 @@ function renderInventory() {
         } else {
             slot.className = 'item-slot empty';
             slot.innerHTML = '';
-            slot.onclick   = null;
-            slot.title     = '';
+            slot.onclick = null;
+            slot.title = '';
         }
     }
 }
@@ -569,10 +569,10 @@ function sign(n) { return n > 0 ? '+' : ''; }
 // ============================================================
 
 function runLuckTest(successChapter, failChapter) {
-    const roll     = rollDice(2, 6);
-    const curLuck  = getStatValue("luck-val");
-    const newLuck  = updateStat("luck", curLuck - 1);
-    const success  = roll <= curLuck;
+    const roll = rollDice(2, 6);
+    const curLuck = getStatValue("luck-val");
+    const newLuck = updateStat("luck", curLuck - 1);
+    const success = roll <= curLuck;
 
     if (success) {
         showToast(`🍀 Szerencse-próba SIKERES! (${roll} ≤ ${curLuck})  –  Szerencse: ${newLuck}`);
@@ -599,12 +599,12 @@ function startBattle(name, skill, stamina, nextChapter, escapeChapter) {
         name,
         skill,
         stamina,
-        maxStamina:  stamina,
-        next:        nextChapter,
-        escape:      escapeChapter || null
+        maxStamina: stamina,
+        next: nextChapter,
+        escape: escapeChapter || null
     };
 
-    setStatDisplay("enemy-name",    name);
+    setStatDisplay("enemy-name", name);
     setStatDisplay("enemy-stamina", stamina);
     updateEnemyHpBar();
 
@@ -614,7 +614,7 @@ function startBattle(name, skill, stamina, nextChapter, escapeChapter) {
 
     resetDice();
     setStatDisplay("player-dice-result", "—");
-    setStatDisplay("enemy-dice-result",  "—");
+    setStatDisplay("enemy-dice-result", "—");
 
     const battleLog = document.getElementById("battle-log");
     if (battleLog) battleLog.textContent = "⚔ Csata kezdődik! Dobj a kockával!";
@@ -674,20 +674,20 @@ function battleRound(onRoundComplete) {
 
     const pRoll1 = rollDice(1, 6);
     const pRoll2 = rollDice(1, 6);
-    const pRoll  = pRoll1 + pRoll2;
-    const eRoll  = rollDice(2, 6);
+    const pRoll = pRoll1 + pRoll2;
+    const eRoll = rollDice(2, 6);
 
     if (battleLog) battleLog.textContent = "🎲 A kockák pörögnek...";
 
     animateDice(pRoll1, pRoll2, () => {
-        const playerSkill   = getStatValue("skill-val");
+        const playerSkill = getStatValue("skill-val");
         const playerStamina = getStatValue("stamina-val");
 
         const playerAtk = playerSkill + pRoll;
-        const enemyAtk  = currentEnemy.skill + eRoll;
+        const enemyAtk = currentEnemy.skill + eRoll;
 
         setStatDisplay("player-dice-result", `${pRoll1}+${pRoll2}=${pRoll} (Ü:${playerSkill})`);
-        setStatDisplay("enemy-dice-result",  `${eRoll} (Ü:${currentEnemy.skill})`);
+        setStatDisplay("enemy-dice-result", `${eRoll} (Ü:${currentEnemy.skill})`);
 
         let log = `🎲 Te: ${pRoll1} + ${pRoll2} = ${pRoll}  →  Támadás: ${playerAtk}\n🎲 ${currentEnemy.name}: ${eRoll}  →  Támadás: ${enemyAtk}\n`;
 
@@ -695,7 +695,7 @@ function battleRound(onRoundComplete) {
             currentEnemy.stamina = Math.max(0, currentEnemy.stamina - 2);
             setStatDisplay("enemy-stamina", currentEnemy.stamina);
             updateEnemyHpBar();
-            log += `✔ Megsebezted! (${currentEnemy.name} ÉP: ${currentEnemy.stamina})`;
+            log += `✔ Megsebezted! (${currentEnemy.name} HP: ${currentEnemy.stamina})`;
 
         } else if (enemyAtk > playerAtk) {
             const newStamina = updateStat("stamina", playerStamina - 2);
@@ -731,7 +731,7 @@ function handlePlayerDeath() {
         try {
             localStorage.removeItem('kjk_character');
             localStorage.removeItem('kjk_current_chapter');
-        } catch(_) {}
+        } catch (_) { }
         generalKalandlap();
         loadChapter("1");
         const fightBox = document.getElementById("fight");
